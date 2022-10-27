@@ -1,0 +1,36 @@
+@startuml
+interface Friend{}
+interface Beneficiary{}
+interface User{}
+
+class App{}
+
+App --> User
+App --> Beneficiary
+App --> Friend
+
+interface Authenticators{}
+App --> Authenticators
+
+
+
+class Transactions{}
+App --> Transactions
+Transactions --> Payment
+Transactions --> Purchase
+
+interface TransactionMethod{}
+
+class Payment{}
+Payment --> TransactionMethod
+class PaymentValidator{}
+Payment --> PaymentValidator
+
+class Purchase{}
+class PurchaseValidator{}
+Purchase --> PurchaseValidator
+Purchase --> TransactionMethod
+
+class Donation{}
+Transactions --> Donation
+@enduml

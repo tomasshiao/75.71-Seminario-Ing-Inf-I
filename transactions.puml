@@ -1,0 +1,19 @@
+@startuml
+interface TransactionMethod{}
+class CreditCardTransaction{}
+CreditCardTransaction ..|> TransactionMethod
+class DebitCardTransaction
+DebitCardTransaction ..|> TransactionMethod
+class CashTransaction{}
+CashTransaction ..|> TransactionMethod
+
+interface Transaction
+Payment ..|> Transaction
+Purchase ..|> Transaction
+
+interface TransactionValidator{}
+class PaymentValidator{}
+class PurchaseValidator{}
+PaymentValidator ..|> TransactionValidator
+PurchaseValidator ..|> TransactionValidator
+@enduml

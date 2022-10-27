@@ -1,0 +1,9 @@
+@startuml
+interface Authenticator{}
+class BeneficiaryAuthenticator{}
+BeneficiaryAuthenticator ..|> Authenticator
+class AddressAuthenticator{}
+AddressAuthenticator ..|> Authenticator
+class IdentityAuthenticator{}
+IdentityAuthenticator ..|> Authenticator
+@enduml
