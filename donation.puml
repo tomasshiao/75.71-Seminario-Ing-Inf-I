@@ -1,0 +1,22 @@
+@startuml
+class Donation{}
+
+enum Period{
+OneTime
+Weekly
+Quarterly
+Monthly
+Anually
+}
+
+enum Type{
+Monetary
+MaterialGoods
+AlimentaryPerishable
+AlimentaryNonePerishable
+}
+
+
+Donation --> Period
+Donation --> Type
+@enduml
