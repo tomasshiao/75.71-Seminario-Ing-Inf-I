@@ -9,15 +9,15 @@ App --> User
 App --> Beneficiary
 App --> Friend
 
-interface Authenticators{}
-App --> Authenticators
+interface Authenticator{}
+App --> Authenticator
 
 
 
-class Transactions{}
-App --> Transactions
-Transactions --> Payment
-Transactions --> Purchase
+class Transaction{}
+App --> Transaction
+Transaction --> Payment
+Transaction --> Purchase
 
 interface TransactionMethod{}
 
@@ -31,6 +31,13 @@ class PurchaseValidator{}
 Purchase --> PurchaseValidator
 Purchase --> TransactionMethod
 
-class Donation{}
-Transactions --> Donation
+
+
+class Finance{}
+App --> Finance
+
+
+class Event{}
+App --> Event
+
 @enduml
