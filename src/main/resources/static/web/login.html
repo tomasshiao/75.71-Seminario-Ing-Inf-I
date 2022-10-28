@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login to TrackNGO</title>
+    <link rel="stylesheet" href="styles/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <div v-show="user == 'Guest'">
+            <div id="formularioLogIn">
+                <form class="form-inline row" id="login-form" onsubmit="return false">
+                    <label for="username" class="col col-1">Username: </label><input class="form-control col col-3" id="username" name="username" required>
+                    <label for="password" class="col col-1">Password: </label><input class="form-control col col-3" id="password" type="password" name="password" required>
+                    <br>
+                    <input type="button" class="form-control btn btn-info col col-1" @click="login()" value="Log in">
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="scripts/popper.min.js"></script>
+    <script src="scripts/jquery-3.5.1.min.js"></script>
+    <script src="scripts/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+</body>
+</html>
