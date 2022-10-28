@@ -2,10 +2,13 @@ package com.example.trackNGO.Model
 
 import org.hibernate.annotations.GenericGenerator
 
-import javax.persistence.*
+import javax.persistence.Entity
+import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
+import javax.persistence.Id
 
 @Entity
-class Volunteer {
+class SystemAdministrator {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name="native", strategy="native")
@@ -15,12 +18,12 @@ class Volunteer {
     private String password
     private String authority
 
-    Volunteer(){}
+    SystemAdministrator(){}
 
-    Volunteer(String userName, String password){
+    SystemAdministrator(String userName, String password){
         this.userName = userName
         this.password = password
-        this.authority = 'user'
+        this.authority = 'SysAdmin'
         this
     }
 
