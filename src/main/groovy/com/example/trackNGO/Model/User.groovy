@@ -8,22 +8,21 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 
 @Entity
-class SystemAdministrator {
+class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
-    @GenericGenerator(name="native", strategy="native")
+    @GenericGenerator(name = "native", strategy = "native")
 
-    private Long id
+    private Profile profile
     private String userName
     private String password
-    private String authority
 
-    SystemAdministrator(){}
+    User(){}
 
-    SystemAdministrator(String userName, String password){
+    User(String userName, String password, Profile profile){
         this.userName = userName
         this.password = password
-        this.authority = 'SysAdmin'
+        this.profile = profile
         this
     }
 
@@ -39,11 +38,11 @@ class SystemAdministrator {
         this.password
     }
 
-    String getAuthority(){
-        this.authority
+    Map<String, Object> getProfile(){
+        this.profile.toDTO()
     }
 
     Map<String, Object> toDTO(){
-        ["username": this.userName, "id": this.id, "auth": this.authority] as Map<String, Object>
+        ["username": this.getUserName(), "id": this.getId(), "profile": this.getProfile()] as Map<String, Object>
     }
 }

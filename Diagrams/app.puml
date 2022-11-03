@@ -1,7 +1,7 @@
 @startuml
 interface Friend{}
 interface Beneficiary{}
-interface User{}
+class User{}
 
 class App{}
 

@@ -1,0 +1,18 @@
+@startuml
+interface Profile{}
+class User{
+    - Profile
+}
+
+User --> Profile
+
+class Volunteer{}
+Volunteer ..|> Profile
+
+class SystemAdministrator{}
+SystemAdministrator ..|> Profile
+
+class App{}
+App --> User
+
+@enduml
