@@ -13,6 +13,8 @@ class User {
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
 
+    private Long id
+    private Date createdDate
     private Profile profile
     private String userName
     private String password
@@ -30,6 +32,10 @@ class User {
         this.id
     }
 
+    Date getCreatedDate(){
+        this.createdDate
+    }
+
     String getUserName(){
         this.userName
     }
@@ -43,6 +49,6 @@ class User {
     }
 
     Map<String, Object> toDTO(){
-        ["username": this.getUserName(), "id": this.getId(), "profile": this.getProfile()] as Map<String, Object>
+        ["username": this.getUserName(), "id": this.getId(), "profile": this.getProfile(), "createdDate": this.getCreatedDate()] as Map<String, Object>
     }
 }

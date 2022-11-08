@@ -41,7 +41,10 @@ var app = new Vue({
                     });
                 })
                 .then(function(){
-                    $.post("/api/login", {username: request.userName, password: request.password})
+                    $.post("/api/login", {
+                        username: request.userName, 
+                        password: request.password
+                    })
                         .done(function() {
                             location.reload();
                         })
