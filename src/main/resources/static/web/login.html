@@ -4,17 +4,21 @@
     <meta charset="UTF-8">
     <title>Login to TrackNGO</title>
     <link rel="stylesheet" href="styles/bootstrap.min.css">
+    <link rel="stylesheet" href="styles/login.css">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
 <body>
     <div id="app">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <h1 class="navbar-brand">trackNGO</h1>
+        </nav>
         <!--div v-show="user == 'Guest'"-->
-        <div>
-            <div id="formularioLogIn">
+        <div class="row">
+            <div id="formularioLogIn" class="col col-8">
                 <form class="form-inline row" id="login-form" onsubmit="return false">
-                    <label for="username" class="col col-1">Username: </label><input class="form-control col col-3" id="username" name="username" required>
-                    <label for="password" class="col col-1">Password: </label><input class="form-control col col-3" id="password" type="password" name="password" required>
-                    <br>
+                    <label for="username" class="col col-1">Username: </label><input class="form-control col col-3" id="username" type="email" name="username" placeholder="Username" required>
+                    <label for="password" class="col col-1">Password: </label><input class="form-control col col-3" id="password" type="password" name="password" placeholder="Password" required>
+                    <br><br>
                     <input type="button" class="form-control btn btn-info col col-1" @click="login()" value="Log in">
                 </form>
             </div>
