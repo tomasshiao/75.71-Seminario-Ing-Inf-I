@@ -34,7 +34,9 @@ import org.springframework.security.web.authentication.logout.HttpStatusReturnin
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import javax.servlet.http.HttpSession
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 
 @SpringBootApplication
 class TrackNgoApplication {
@@ -56,7 +58,7 @@ class TrackNgoApplication {
                                CollaboratorRepository collaboratorRepository){
         (arg) -> {
             // Inicializo datos pre cargados
-            Event evento1 = new Event("Evento De Prueba", "Calle Falsa 123", EventType.CHARITY, new LocalDateTime())
+            Event evento1 = new Event("Evento De Prueba", "Calle Falsa 123", EventType.CHARITY, LocalDate.now().plusDays(2), LocalTime.of(04,23))
             eventRepository.save(evento1)
 
             Organization org1 = new Organization("Organización Falsa")
