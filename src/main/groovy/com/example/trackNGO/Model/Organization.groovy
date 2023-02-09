@@ -19,10 +19,10 @@ class Organization {
     private String name
 
     @OneToMany(mappedBy = "organization", fetch = FetchType.EAGER)
-    private Set<OrganizationUsers> organizationUsers = new HashSet<OrganizationUsers>()
+    private Set<OrganizationCollaborator> organizationCollaborators = new HashSet<OrganizationCollaborator>()
 
     @OneToMany(mappedBy = "organization", fetch = FetchType.EAGER)
-    private Set<OrganizationEvents> organizationEvents = new HashSet<OrganizationEvents>()
+    private Set<OrganizationEvent> organizationEvents = new HashSet<OrganizationEvent>()
 
     Organization(){}
 
@@ -39,23 +39,23 @@ class Organization {
         this.name
     }
 
-    HashSet<OrganizationUsers> getOrgUsers(){
-        this.organizationUsers
+    HashSet<OrganizationCollaborator> getOrgCollaborators(){
+        this.organizationCollaborators
     }
 
-    HashSet<OrganizationEvents> getOrgEvents(){
+    HashSet<OrganizationEvent> getOrgEvents(){
         this.organizationEvents
     }
 
-    HashSet<User> getOrgAdmins(){
-        this.organizationUsers.stream().filter(user -> user.getUser().getProfile().get("Profile") == "SysAdmin") as HashSet<User>
+    HashSet<Collaborator> getOrgAdmins(){
+        this.organizationCollaborators.stream().filter(collaborator -> collaborator.getCollaborator().getProfile() == "SysAdmin") as HashSet<Collaborator>
     }
 
     Map<String, Object> toDTO(){
         [
                 "id": this.getId(),
                 "name": this.getName(),
-                "users": this.getOrgUsers(),
+                "collaborators": this.getOrgCollaborators(),
                 "events": this.getOrgEvents(),
                 "admins": this.getOrgAdmins()
         ] as Map<String, Object>

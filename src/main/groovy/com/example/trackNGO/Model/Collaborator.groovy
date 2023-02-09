@@ -8,7 +8,7 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 
 @Entity
-class User {
+class Collaborator {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
@@ -16,13 +16,13 @@ class User {
     private Long id
     private Date createdDate
     private Profile profile
-    private String userName
+    private String collaboratorName
     private String password
 
-    User(){}
+    Collaborator(){}
 
-    User(String userName, String password, Profile profile){
-        this.userName = userName
+    Collaborator(String collaboratorName, String password, Profile profile){
+        this.collaboratorName = collaboratorName
         this.password = password
         this.profile = profile
         this
@@ -36,8 +36,8 @@ class User {
         this.createdDate
     }
 
-    String getUserName(){
-        this.userName
+    String getCollaboratorName(){
+        this.collaboratorName
     }
 
     String getPassword(){
@@ -45,10 +45,10 @@ class User {
     }
 
     Map<String, Object> getProfile(){
-        this.profile.toDTO()
+        this.profile
     }
 
     Map<String, Object> toDTO(){
-        ["username": this.getUserName(), "id": this.getId(), "profile": this.getProfile(), "createdDate": this.getCreatedDate()] as Map<String, Object>
+        ["collaboratorName": this.getCollaboratorName(), "id": this.getId(), "profile": this.getProfile(), "createdDate": this.getCreatedDate()] as Map<String, Object>
     }
 }
