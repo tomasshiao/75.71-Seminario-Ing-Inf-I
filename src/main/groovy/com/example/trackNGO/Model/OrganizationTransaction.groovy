@@ -12,8 +12,9 @@ import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 import java.time.LocalDateTime
 
+
 @Entity
-class OrganizationCollaborator {
+class OrganizationTransaction {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
@@ -25,8 +26,8 @@ class OrganizationCollaborator {
     private Organization organization
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="collaborator_id")
-    private Collaborator collaborator
+    @JoinColumn(name="txn_id")
+    private Transaction transaction
 
     @JsonIgnore
     Organization getOrganization(){
@@ -34,15 +35,15 @@ class OrganizationCollaborator {
     }
 
     @JsonIgnore
-    Collaborator getCollaborator(){
-        this.collaborator
+    Transaction getTransaction(){
+        this.transaction
     }
 
-    OrganizationCollaborator(){}
+    OrganizationTransaction(){}
 
-    OrganizationCollaborator(Organization organization, Collaborator collaborator){
+    OrganizationTransaction(Organization organization, Transaction transaction){
         this.organization = organization
-        this.collaborator = collaborator
+        this.transaction = transaction
         this.createdDate = LocalDateTime.now()
     }
 
@@ -57,9 +58,10 @@ class OrganizationCollaborator {
     Map<String, Object> toDTO(){
         [
                 "orgCollaboratorId": this.getId(),
-                "collaborator": this.getCollaborator().toDTO(),
+                "transaction": this.getTransaction().toDTO(),
                 "createdDate": this.getCreatedDate(),
                 "organization": this.getOrganization().toDTO()
         ] as Map<String, Object>
     }
+
 }
