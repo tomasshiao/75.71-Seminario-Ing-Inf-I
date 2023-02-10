@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.repository.query.Param
 
 interface CollaboratorRepository extends JpaRepository<Collaborator, Long> {
-    Collaborator findByCollaboratorName(@Param("collaboratorName")String userName)
+    Collaborator findByCollaboratorName(@Param("collaboratorName")String collaboratorName)
 }

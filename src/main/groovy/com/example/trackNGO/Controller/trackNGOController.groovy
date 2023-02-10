@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/app")
+@RequestMapping("/api")
 class TrackNGOController {
     @Autowired
     private CollaboratorRepository collaboratorRepository
@@ -31,7 +31,7 @@ class TrackNGOController {
     private OrganizationCollaboratorRepository organizationCollaboratorRepository
 
 
-    private boolean isGuest(Authentication authentication) {
-        return authentication == null || authentication instanceof AnonymousAuthenticationToken;
-    }
+    /*private boolean isGuest(Authentication authentication) {
+        return authentication == null || authentication instanceof AnonymousAuthenticationToken
+    }*/
 }

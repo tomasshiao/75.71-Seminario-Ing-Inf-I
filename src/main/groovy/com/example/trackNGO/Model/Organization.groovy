@@ -69,10 +69,14 @@ class Organization {
     }
 
     HashSet<Collaborator> getOrgAdmins(){
-        this.organizationCollaborators.stream().filter(collaborator -> collaborator.getCollaborator().getProfile() == "SysAdmin") as HashSet<Collaborator>
+        this.organizationCollaborators.stream().filter(collaborator -> collaborator.getCollaborator().getProfile() == Profile.SYSADMIN) as HashSet<Collaborator>
     }
 
-    private updateBalance(Transaction txn){
+    BigDecimal setBalance(BigDecimal newBalance){
+        this.balance = newBalance
+    }
+
+    /*private updateBalance(Transaction txn){
         TransactionType txnType = txn.getTxnType()
         if(txnType == TransactionType.PAYMENT || txnType == TransactionType.PURCHASE){
             if(txn.getTxnAmount() > this.balance){
@@ -88,13 +92,14 @@ class Organization {
         } else {
             throw new InvalidTransactionException("Tipo de Transacción Inválido.")
         }
-    }
+    }*/
 
     Map<String, Object> toDTO(){
         [
                 "id": this.getId(),
                 "name": this.getName(),
                 "collaborators": this.getOrgCollaborators(),
+                "transactions": this.getOrgTransactions(),
                 "events": this.getOrgEvents(),
                 "admins": this.getOrgAdmins(),
                 "balance": this.getBalance(),

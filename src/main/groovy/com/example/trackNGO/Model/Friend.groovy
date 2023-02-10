@@ -9,23 +9,19 @@ import javax.persistence.Id
 import java.time.LocalDateTime
 
 @Entity
-class Collaborator implements Person {
+class Friend implements Person {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
 
     private Long id
     private LocalDateTime createdDate
-    private Profile profile
-    private String collaboratorName
-    private String password
+    private String fullName
 
-    Collaborator(){}
+    Friend(){}
 
-    Collaborator(String collaboratorName, String password, Profile profile){
-        this.collaboratorName = collaboratorName
-        this.password = password
-        this.profile = profile
+    Friend(String fullName){
+        this.fullName = fullName
         this.createdDate = LocalDateTime.now()
         this
     }
@@ -39,22 +35,13 @@ class Collaborator implements Person {
     }
 
     String getName(){
-        this.collaboratorName
-    }
-
-    String getPassword(){
-        this.password
-    }
-
-    Profile getProfile(){
-        this.profile
+        this.fullName
     }
 
     Map<String, Object> toDTO(){
         [
                 "collaboratorName": this.getName(),
                 "id": this.getId(),
-                "profile": this.getProfile(),
                 "createdDate": this.getCreatedDate()
         ] as Map<String, Object>
     }

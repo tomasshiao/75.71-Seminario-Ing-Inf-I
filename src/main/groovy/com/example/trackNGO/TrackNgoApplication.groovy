@@ -35,7 +35,6 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import javax.servlet.http.HttpSession
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.LocalTime
 
 @SpringBootApplication
@@ -81,23 +80,23 @@ class TrackNgoApplication {
 @Configuration
 class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
     @Autowired
-    CollaboratorRepository collaboratorRepository;
+    CollaboratorRepository collaboratorRepository
     @Autowired
-    PasswordEncoder passwordEncoder;
+    PasswordEncoder passwordEncoder
 
     @Override
     void init(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(inputName -> {
             Collaborator collaborator = collaboratorRepository.findByCollaboratorName(inputName)
             if (collaborator != null) {
-                boolean isAdmin = collaborator.profile == "SysAdmin"
+                boolean isAdmin = collaborator.profile == Profile.SYSADMIN
                 String authority = isAdmin ? "ADMIN" : "USER"
-                return new User(collaborator.getCollaboratorName(), collaborator.getPassword(),
+                return new User(collaborator.getName(), collaborator.getPassword(),
                         AuthorityUtils.createAuthorityList(authority))
             } else {
-                throw new UsernameNotFoundException("Unknown user: " + inputName);
+                throw new UsernameNotFoundException("Unknown user: " + inputName)
             }
-        });
+        })
     }
 }
 @EnableWebSecurity

@@ -30,7 +30,7 @@ var app = new Vue({
                 userName: $("#username").val(),
                 password: $("#password").val()
             };
-            $.post("/api/users", request)
+            $.post("/api/collaborators", request)
                 .done(function(){
                     swal.fire({
                         icon:'success',
