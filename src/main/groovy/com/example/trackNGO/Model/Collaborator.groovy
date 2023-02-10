@@ -6,6 +6,7 @@ import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
+import java.time.LocalDateTime
 
 @Entity
 class Collaborator {
@@ -14,7 +15,7 @@ class Collaborator {
     @GenericGenerator(name = "native", strategy = "native")
 
     private Long id
-    private Date createdDate
+    private LocalDateTime createdDate
     private Profile profile
     private String collaboratorName
     private String password
@@ -25,6 +26,7 @@ class Collaborator {
         this.collaboratorName = collaboratorName
         this.password = password
         this.profile = profile
+        this.createdDate = LocalDateTime.now()
         this
     }
 
@@ -32,7 +34,7 @@ class Collaborator {
         this.id
     }
 
-    Date getCreatedDate(){
+    LocalDateTime getCreatedDate(){
         this.createdDate
     }
 
@@ -44,7 +46,7 @@ class Collaborator {
         this.password
     }
 
-    Map<String, Object> getProfile(){
+    Profile getProfile(){
         this.profile
     }
 
