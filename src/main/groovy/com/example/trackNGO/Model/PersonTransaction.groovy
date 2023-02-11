@@ -11,6 +11,7 @@ import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
+import javax.persistence.OneToOne
 import java.time.LocalDateTime
 
 @Entity
@@ -21,7 +22,7 @@ class PersonTransaction {
     private Long id
     private LocalDateTime createdDate
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="transaction_id")
     private Transaction transaction
 
