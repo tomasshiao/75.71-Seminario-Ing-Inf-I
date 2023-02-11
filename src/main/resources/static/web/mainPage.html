@@ -75,7 +75,7 @@
                     <section id="operations">
                         <h2>Gestiones</h2>
                         <div v-for="operation in operations" class="row">
-                            <button class="col col-2" @click="{{operation.invokeMethod}}">{{operation.name}}</button>
+                            <button class="col col-2" @click="operation.invokeMethod">{{operation.name}}</button>
                         </div>
                     </section>
                 </section>
