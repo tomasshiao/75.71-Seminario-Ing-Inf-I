@@ -1,6 +1,5 @@
 package com.example.trackNGO.Model
 
-import javax.persistence.Entity
 import java.time.LocalDateTime
 
 interface Person {

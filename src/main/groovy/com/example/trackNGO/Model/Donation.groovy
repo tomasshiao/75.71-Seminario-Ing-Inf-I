@@ -10,6 +10,7 @@ import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
+import javax.persistence.OneToOne
 import java.time.LocalDateTime
 
 @Entity
@@ -24,16 +25,18 @@ class Donation {
     private DonationRecurrency recurrencyType
     private DonationType donationType
     private DonationStatus status
-    private AbstractPerson donor
     private BigDecimal amount
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="organizationPerson_id")
     private OrganizationPerson organizationPerson
 
+    @OneToOne(mappedBy = "donation", fetch = FetchType.EAGER)
+    private PersonDonation personDonation
+
     Donation(){}
 
-    Donation(DonationRecurrency recurrencyType, DonationType donationType, AbstractPerson donor, BigDecimal amount){
+    Donation(DonationRecurrency recurrencyType, DonationType donationType, BigDecimal amount){
         this.createdDate = LocalDateTime.now()
         if(donationType != DonationType.MONETARY){
             this.isRecurrent = false
@@ -45,7 +48,6 @@ class Donation {
         this.amount = amount
         this.donationType = donationType
         this.status = DonationStatus.ACTIVE
-        this.donor = donor
         this
     }
 
@@ -78,8 +80,16 @@ class Donation {
         this.status
     }
 
-    AbstractPerson getDonor(){
-        this.donor
+    PersonDonation getPersonDonation(){
+        this.personDonation
+    }
+
+    PersonDonation setPersonDonation(PersonDonation personDonation){
+        this.personDonation = personDonation
+    }
+
+    Person getDonor(){
+        this.personDonation.getPerson()
     }
 
     Map<String, Object> toDTO(){

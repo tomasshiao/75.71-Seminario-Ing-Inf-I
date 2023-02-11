@@ -1,5 +1,6 @@
 package com.example.trackNGO.Controller
 
+import com.example.trackNGO.Model.AbstractPerson
 import com.example.trackNGO.Model.Collaborator
 import com.example.trackNGO.Model.Donation
 import com.example.trackNGO.Model.DonationRecurrency
@@ -86,12 +87,12 @@ class TrackNGOController {
                 dto.put("events", "No events.")
             }
         } else {
-            dto.put("collaborator", "Guest");
+            dto.put("collaborator", "Guest")
         }
         return dto
     }
 
-    @RequestMapping(path = "/donations/{type}/{donorId}/{recurrency}/{amount}", method = RequestMethod.POST)
+    @RequestMapping(path = "/donations/{donationType}/{donorId}/{donationRecurrency}/{amount}", method = RequestMethod.POST)
     ResponseEntity<Map<String, Object>> createDonation(@PathVariable String donationType, @PathVariable Long donorId, @PathVariable String donationRecurrency, @PathVariable BigDecimal amount, Authentication authentication){
         if(isGuest(authentication)){
             return new ResponseEntity<>(MakeMap("error", "Usuario no autenticado."), HttpStatus.FORBIDDEN)
@@ -116,18 +117,15 @@ class TrackNGOController {
         Person donor = (collaborator == null) ? friend : collaborator
         DonationType type = donationType.toUpperCase() as DonationType
         DonationRecurrency recurrency = donationRecurrency.toUpperCase() as DonationRecurrency
-        Donation donation = donationRepository.save(new Donation(recurrency, type, donor, amount))
-        PersonDonation personDonation
-        if(collaborator == null){
-            personDonation = personDonationRepository.save(new PersonDonation(donation, friend))
-        } else {
-            personDonation = personDonationRepository.save(new PersonDonation(donation, collaborator))
-        }
+        Donation donation = donationRepository.save(new Donation(recurrency, type, amount))
+        PersonDonation personDonation = personDonationRepository.save(new PersonDonation(donation, donor))
         Map<String,Object> response = new LinkedHashMap<>()
         if((DonationType.MONETARY == (donationType.toUpperCase() as DonationType))){
-            Transaction transaction = transactionRepository.save(new Transaction(amount, TransactionType.RECEIPT, donor))
+            Transaction transaction = transactionRepository.save(new Transaction(amount, TransactionType.RECEIPT))
             response.put("txnId", transaction.getId())
         }
+        donation.setPersonDonation(personDonation)
+        donationRepository.save(donation)
         response.put("personDonationId", personDonation.getId())
         response.put("donationId", donation.getId())
         return new ResponseEntity<>(response, HttpStatus.CREATED)

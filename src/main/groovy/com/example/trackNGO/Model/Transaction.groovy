@@ -25,7 +25,6 @@ class Transaction {
     private String description
     private TransactionStatus status
     private String rejectionReason
-    //private AbstractPerson transactionPerson
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="organizationPerson_id")
@@ -48,7 +47,7 @@ class Transaction {
         this.amount = amount
         this.status = TransactionStatus.PROCESSING
         this.rejectionReason = ""
-        //this.transactionPerson = person
+        this.personTransaction  = null
         this
     }
 
@@ -61,7 +60,7 @@ class Transaction {
         this.type = type
         this.amount = amount
         this.description = description
-        //this.transactionPerson = null
+        this.personTransaction = null
         this
     }
 
@@ -107,9 +106,17 @@ class Transaction {
         this.rejectionReason
     }
 
-    /*Person getTxnPerson(){
-        this.transactionPerson
-    }*/
+    Person getTxnPerson(){
+        this.personTransaction.getPerson()
+    }
+
+    PersonTransaction setPersonTransaction(PersonTransaction personTransaction){
+        this.personTransaction = personTransaction
+    }
+
+    PersonTransaction getPersonTransaction(){
+        this.personTransaction
+    }
 
     Map<String, Object> toDTO(){
         [
@@ -120,8 +127,8 @@ class Transaction {
                 "type": this.getTxnType(),
                 "description": this.getTxnDescription(),
                 "status": this.getStatus(),
-                "rejectionReason": this.getRejectionReason()
-                //"txnPerson": this.getTxnPerson().toDTO()
+                "rejectionReason": this.getRejectionReason(),
+                "txnPerson": this.getTxnPerson().toDTO()
         ] as Map<String, Object>
     }
 }

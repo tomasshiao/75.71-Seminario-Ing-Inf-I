@@ -25,12 +25,9 @@ class PersonTransaction {
     @JoinColumn(name="transaction_id")
     private Transaction transaction
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, targetEntity = AbstractPerson.class)
     @JoinColumn(name="person_id")
-    private AbstractPerson person
-
-    @OneToMany(mappedBy = "personTransaction", fetch = FetchType.EAGER)
-    private Set<Transaction> transactions = new HashSet<>()
+    private Person person
 
     @JsonIgnore
     Transaction getTransaction(){
@@ -38,13 +35,13 @@ class PersonTransaction {
     }
 
     @JsonIgnore
-    AbstractPerson getPerson(){
+    Person getPerson(){
         this.person
     }
 
     PersonTransaction(){}
 
-    PersonTransaction(Transaction transaction, AbstractPerson person){
+    PersonTransaction(Transaction transaction, Person person){
         this.transaction = transaction
         this.person = person
         this.createdDate = LocalDateTime.now()

@@ -11,7 +11,7 @@ import javax.persistence.OneToMany
 import java.time.LocalDateTime
 
 @Entity
-class Collaborator extends AbstractPerson {
+class Collaborator extends AbstractPerson implements Person{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
@@ -35,14 +35,17 @@ class Collaborator extends AbstractPerson {
         this
     }
 
+    @Override
     Long getId(){
         this.id
     }
 
+    @Override
     LocalDateTime getCreatedDate(){
         this.createdDate
     }
 
+    @Override
     String getName(){
         this.collaboratorName
     }
@@ -51,10 +54,12 @@ class Collaborator extends AbstractPerson {
         this.password
     }
 
+    @Override
     Profile getProfile(){
         this.profile
     }
 
+    @Override
     Map<String, Object> toDTO(){
         [
                 "collaboratorName": this.getName(),

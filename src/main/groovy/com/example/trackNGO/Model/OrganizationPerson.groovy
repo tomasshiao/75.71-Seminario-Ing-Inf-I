@@ -20,19 +20,14 @@ class OrganizationPerson {
     @GenericGenerator(name = "native", strategy = "native")
     private Long id
     private LocalDateTime createdDate
-    private Person person
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="org_id")
     private Organization organization
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="collaborator_id")
-    private Collaborator collaborator
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="friend_id")
-    private Friend friend
+    @ManyToOne(fetch = FetchType.EAGER, targetEntity = AbstractPerson.class)
+    @JoinColumn(name="person_id")
+    private Person person
 
 
     @OneToMany(mappedBy = "organizationPerson", fetch = FetchType.EAGER)
@@ -63,19 +58,9 @@ class OrganizationPerson {
 
     OrganizationPerson(){}
 
-    OrganizationPerson(Organization organization, Collaborator collaborator){
+    OrganizationPerson(Organization organization, Person person){
         this.organization = organization
-        this.collaborator = collaborator
-        this.friend = null
-        this.person = collaborator
-        this.createdDate = LocalDateTime.now()
-    }
-
-    OrganizationPerson(Organization organization, Friend friend){
-        this.organization = organization
-        this.collaborator = null
-        this.friend = friend
-        this.person = friend
+        this.person = person
         this.createdDate = LocalDateTime.now()
     }
 

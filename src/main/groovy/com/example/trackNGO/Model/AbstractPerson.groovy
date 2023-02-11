@@ -7,14 +7,16 @@ import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
+import javax.persistence.Inheritance
+import javax.persistence.InheritanceType
 import javax.persistence.OneToMany
 import java.time.LocalDateTime
 
 @Entity
-abstract class AbstractPerson implements Person{
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+abstract class AbstractPerson{
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
-    @GenericGenerator(name = "native", strategy = "native")
+    @GeneratedValue(strategy = GenerationType.TABLE)
 
     private Long id
     private LocalDateTime createdDate
