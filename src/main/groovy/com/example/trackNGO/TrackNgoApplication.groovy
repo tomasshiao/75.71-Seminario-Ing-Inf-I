@@ -4,13 +4,13 @@ import com.example.trackNGO.Model.Collaborator
 import com.example.trackNGO.Model.Event
 import com.example.trackNGO.Model.EventType
 import com.example.trackNGO.Model.Organization
-import com.example.trackNGO.Model.OrganizationCollaborator
+import com.example.trackNGO.Model.OrganizationPerson
 import com.example.trackNGO.Model.OrganizationEvent
 import com.example.trackNGO.Model.Profile
 import com.example.trackNGO.Repositories.EventRepository
 import com.example.trackNGO.Repositories.OrganizationEventRepository
 import com.example.trackNGO.Repositories.OrganizationRepository
-import com.example.trackNGO.Repositories.OrganizationCollaboratorRepository
+import com.example.trackNGO.Repositories.OrganizationPersonRepository
 import com.example.trackNGO.Repositories.CollaboratorRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.CommandLineRunner
@@ -53,7 +53,7 @@ class TrackNgoApplication {
     CommandLineRunner initData(EventRepository eventRepository,
                                OrganizationEventRepository organizationEventsRepository,
                                OrganizationRepository organizationRepository,
-                               OrganizationCollaboratorRepository organizationCollaboratorRepository,
+                               OrganizationPersonRepository organizationPersonRepository,
                                CollaboratorRepository collaboratorRepository){
         (arg) -> {
             // Inicializo datos pre cargados
@@ -70,9 +70,9 @@ class TrackNgoApplication {
             Collaborator collaborator2 = new Collaborator("Usuario Administrador", "admin123", Profile.SYSADMIN)
             collaboratorRepository.saveAll(Arrays.asList(collaborator1, collaborator2))
 
-            OrganizationCollaborator orgCollab1 = new OrganizationCollaborator(org1, collaborator1)
-            OrganizationCollaborator orgCollab2 = new OrganizationCollaborator(org1, collaborator2)
-            organizationCollaboratorRepository.saveAll(Arrays.asList(orgCollab1, orgCollab2))
+            OrganizationPerson orgPerson1 = new OrganizationPerson(org1, collaborator1)
+            OrganizationPerson orgPerson2 = new OrganizationPerson(org1, collaborator2)
+            organizationPersonRepository.saveAll(Arrays.asList(orgPerson1, orgPerson2))
         }
     }
 }
@@ -106,14 +106,22 @@ class WebSecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests()
             .antMatchers("/rest/**").hasAuthority("ADMIN")
-            .antMatchers("/web/**").permitAll()
-            .antMatchers("/api/**").permitAll()
+            .antMatchers("/api/logout", "/web/createOrg.html", "/web/createTxn.html", "/web/createDonation.html", "/web/event.html*", "/web/person.html*", "/web/transaction.html*", "/web/donation.html*", "/web/mainPage.html").hasAuthority("USER")
+            .antMatchers("/api/logout", "/web/createOrg.html", "/web/createTxn.html", "/web/createDonation.html", "/web/event.html*", "/web/person.html*", "/web/transaction.html*", "/web/donation.html*", "/web/mainPage.html").hasAuthority("ADMIN")
+            .antMatchers("/api/login").permitAll()
+            .antMatchers("/api/collaborators").permitAll()
+            .antMatchers("/api/organizations").permitAll()
+            .antMatchers("/api/organizationCollaborators").permitAll()
+            .antMatchers("/web/style/**").permitAll()
+            .antMatchers("/web/script/**").permitAll()
+            .antMatchers("/web/login.html").permitAll()
             .anyRequest().denyAll()
 
         http.formLogin()
             .usernameParameter("username")
             .passwordParameter("password")
             .loginPage("/api/login")
+
         http.logout().logoutUrl("/api/logout")
 
         // turn off checking for CSRF tokens

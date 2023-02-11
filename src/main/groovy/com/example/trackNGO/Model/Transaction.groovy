@@ -3,9 +3,12 @@ package com.example.trackNGO.Model
 import org.hibernate.annotations.GenericGenerator
 
 import javax.persistence.Entity
+import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
+import javax.persistence.JoinColumn
+import javax.persistence.ManyToOne
 import java.time.LocalDateTime
 
 @Entity
@@ -23,6 +26,15 @@ class Transaction {
     private TransactionStatus status
     private String rejectionReason
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="organizationPerson_id")
+    private OrganizationPerson organizationPerson
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="personTransaction_id")
+    private PersonTransaction personTransaction
+
+
     Transaction(){}
 
     Transaction(BigDecimal amount, TransactionType type){
@@ -35,6 +47,7 @@ class Transaction {
         this.amount = amount
         this.status = TransactionStatus.PROCESSING
         this.rejectionReason = ""
+        this.personTransaction  = null
         this
     }
 
@@ -47,6 +60,7 @@ class Transaction {
         this.type = type
         this.amount = amount
         this.description = description
+        this.personTransaction = null
         this
     }
 
@@ -92,6 +106,18 @@ class Transaction {
         this.rejectionReason
     }
 
+    Person getTxnPerson(){
+        this.personTransaction.getPerson()
+    }
+
+    PersonTransaction setPersonTransaction(PersonTransaction personTransaction){
+        this.personTransaction = personTransaction
+    }
+
+    PersonTransaction getPersonTransaction(){
+        this.personTransaction
+    }
+
     Map<String, Object> toDTO(){
         [
                 "txnId": this.getId(),
@@ -101,7 +127,8 @@ class Transaction {
                 "type": this.getTxnType(),
                 "description": this.getTxnDescription(),
                 "status": this.getStatus(),
-                "rejectionReason": this.getRejectionReason()
+                "rejectionReason": this.getRejectionReason(),
+                "txnPerson": this.getTxnPerson().toDTO()
         ] as Map<String, Object>
     }
 }

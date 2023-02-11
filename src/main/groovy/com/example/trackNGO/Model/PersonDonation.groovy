@@ -10,6 +10,7 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
+import javax.persistence.OneToOne
 import java.time.LocalDateTime
 
 @Entity
@@ -20,11 +21,11 @@ class PersonDonation {
     private Long id
     private LocalDateTime createdDate
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="donation_id")
     private Donation donation
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, targetEntity = AbstractPerson.class)
     @JoinColumn(name="person_id")
     private Person person
 

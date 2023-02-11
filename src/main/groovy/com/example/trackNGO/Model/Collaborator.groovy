@@ -3,13 +3,15 @@ package com.example.trackNGO.Model
 import org.hibernate.annotations.GenericGenerator
 
 import javax.persistence.Entity
+import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
+import javax.persistence.OneToMany
 import java.time.LocalDateTime
 
 @Entity
-class Collaborator implements Person {
+class Collaborator extends AbstractPerson implements Person{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
@@ -19,6 +21,9 @@ class Collaborator implements Person {
     private Profile profile
     private String collaboratorName
     private String password
+
+    @OneToMany(mappedBy = "collaborator", fetch = FetchType.EAGER)
+    private Set<PersonTransaction> personTransactions = new HashSet<>()
 
     Collaborator(){}
 
@@ -30,14 +35,17 @@ class Collaborator implements Person {
         this
     }
 
+    @Override
     Long getId(){
         this.id
     }
 
+    @Override
     LocalDateTime getCreatedDate(){
         this.createdDate
     }
 
+    @Override
     String getName(){
         this.collaboratorName
     }
@@ -46,10 +54,12 @@ class Collaborator implements Person {
         this.password
     }
 
+    @Override
     Profile getProfile(){
         this.profile
     }
 
+    @Override
     Map<String, Object> toDTO(){
         [
                 "collaboratorName": this.getName(),

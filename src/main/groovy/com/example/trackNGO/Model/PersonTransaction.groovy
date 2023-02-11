@@ -10,11 +10,11 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
+import javax.persistence.OneToMany
 import java.time.LocalDateTime
 
-
 @Entity
-class OrganizationTransaction {
+class PersonTransaction {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
@@ -22,28 +22,28 @@ class OrganizationTransaction {
     private LocalDateTime createdDate
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="org_id")
-    private Organization organization
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="txn_id")
+    @JoinColumn(name="transaction_id")
     private Transaction transaction
 
-    @JsonIgnore
-    Organization getOrganization(){
-        this.organization
-    }
+    @ManyToOne(fetch = FetchType.EAGER, targetEntity = AbstractPerson.class)
+    @JoinColumn(name="person_id")
+    private Person person
 
     @JsonIgnore
     Transaction getTransaction(){
         this.transaction
     }
 
-    OrganizationTransaction(){}
+    @JsonIgnore
+    Person getPerson(){
+        this.person
+    }
 
-    OrganizationTransaction(Organization organization, Transaction transaction){
-        this.organization = organization
+    PersonTransaction(){}
+
+    PersonTransaction(Transaction transaction, Person person){
         this.transaction = transaction
+        this.person = person
         this.createdDate = LocalDateTime.now()
         this
     }
@@ -58,11 +58,10 @@ class OrganizationTransaction {
 
     Map<String, Object> toDTO(){
         [
-                "orgTxnId": this.getId(),
+                "personTransactionId": this.getId(),
                 "transaction": this.getTransaction().toDTO(),
                 "createdDate": this.getCreatedDate(),
-                "organization": this.getOrganization().toDTO()
+                "person": this.getPerson().toDTO()
         ] as Map<String, Object>
     }
-
 }

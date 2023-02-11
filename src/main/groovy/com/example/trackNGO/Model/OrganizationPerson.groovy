@@ -10,10 +10,11 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
+import javax.persistence.OneToMany
 import java.time.LocalDateTime
 
 @Entity
-class OrganizationCollaborator {
+class OrganizationPerson {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
@@ -24,9 +25,16 @@ class OrganizationCollaborator {
     @JoinColumn(name="org_id")
     private Organization organization
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="collaborator_id")
-    private Collaborator collaborator
+    @ManyToOne(fetch = FetchType.EAGER, targetEntity = AbstractPerson.class)
+    @JoinColumn(name="person_id")
+    private Person person
+
+
+    @OneToMany(mappedBy = "organizationPerson", fetch = FetchType.EAGER)
+    private Set<Transaction> transactions = new HashSet<>()
+
+    @OneToMany(mappedBy = "organizationPerson", fetch = FetchType.EAGER)
+    private Set<Donation> donations = new HashSet<>()
 
     @JsonIgnore
     Organization getOrganization(){
@@ -34,15 +42,25 @@ class OrganizationCollaborator {
     }
 
     @JsonIgnore
-    Collaborator getCollaborator(){
-        this.collaborator
+    Person getPerson(){
+        this.person
     }
 
-    OrganizationCollaborator(){}
+    @JsonIgnore
+    Set<Transaction> getTransactions(){
+        this.transactions
+    }
 
-    OrganizationCollaborator(Organization organization, Collaborator collaborator){
+    @JsonIgnore
+    Set<Donation> getDonations(){
+        this.donations
+    }
+
+    OrganizationPerson(){}
+
+    OrganizationPerson(Organization organization, Person person){
         this.organization = organization
-        this.collaborator = collaborator
+        this.person = person
         this.createdDate = LocalDateTime.now()
     }
 
@@ -56,8 +74,10 @@ class OrganizationCollaborator {
 
     Map<String, Object> toDTO(){
         [
-                "orgCollaboratorId": this.getId(),
-                "collaborator": this.getCollaborator().toDTO(),
+                "orgId": this.getOrganization().getId(),
+                "personId": this.getPerson().getId(),
+                "orgPersonId": this.getId(),
+                "person": this.getPerson().toDTO(),
                 "createdDate": this.getCreatedDate(),
                 "organization": this.getOrganization().toDTO()
         ] as Map<String, Object>

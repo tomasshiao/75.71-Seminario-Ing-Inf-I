@@ -10,7 +10,8 @@ enum DonationRecurrency {
     SEASONAL,
     SEMIANNUALLY,
     ANNUALLY,
-    BIENNIALLY
+    BIENNIALLY,
+    NOT_APPLICABLE
 }
 
 /**
