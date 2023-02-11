@@ -3,9 +3,12 @@ package com.example.trackNGO.Model
 import org.hibernate.annotations.GenericGenerator
 
 import javax.persistence.Entity
+import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
+import javax.persistence.JoinColumn
+import javax.persistence.ManyToOne
 import java.time.LocalDateTime
 
 @Entity
@@ -22,6 +25,16 @@ class Transaction {
     private String description
     private TransactionStatus status
     private String rejectionReason
+    //private AbstractPerson transactionPerson
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="organizationPerson_id")
+    private OrganizationPerson organizationPerson
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="personTransaction_id")
+    private PersonTransaction personTransaction
+
 
     Transaction(){}
 
@@ -35,6 +48,7 @@ class Transaction {
         this.amount = amount
         this.status = TransactionStatus.PROCESSING
         this.rejectionReason = ""
+        //this.transactionPerson = person
         this
     }
 
@@ -47,6 +61,7 @@ class Transaction {
         this.type = type
         this.amount = amount
         this.description = description
+        //this.transactionPerson = null
         this
     }
 
@@ -92,6 +107,10 @@ class Transaction {
         this.rejectionReason
     }
 
+    /*Person getTxnPerson(){
+        this.transactionPerson
+    }*/
+
     Map<String, Object> toDTO(){
         [
                 "txnId": this.getId(),
@@ -102,6 +121,7 @@ class Transaction {
                 "description": this.getTxnDescription(),
                 "status": this.getStatus(),
                 "rejectionReason": this.getRejectionReason()
+                //"txnPerson": this.getTxnPerson().toDTO()
         ] as Map<String, Object>
     }
 }

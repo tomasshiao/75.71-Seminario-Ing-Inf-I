@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Create Donation</title>
+        <link rel="stylesheet" href="styles/bootstrap.min.css">
+        <link rel="stylesheet" href="styles/createDonation.css">
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    </head>
+    <body>
+        <div id="createDonationForm">
+            <form class="form-inline row" id="create-donation-form" onsubmit="return false">
+                <label for="donationType" class="col col-1">Tipo de Donación: </label>
+                <select class="form-control col col-3" id="donationType" name="donationType" v-for="option in data.donation.donationOptions" required>
+                    <option value="{{option.value}}">{{option.label}}</option>
+                </select>
+                <br>
+                <label for="amount" class="col col-1" v-show="data.donation.type == 'Monetary'">Amount: </label><input class="form-control col col-3" id="amount" name="amount" type="number" placeholder="Amount"  v-show="donation.type == 'Monetary'" required>
+                <br>
+                <label for="recurrency" class="col col-1" v-show="data.donation.type == 'Monetary'">Recurrency Period: </label>
+                <select class="form-control col col-3" id="recurrency" name="recurrency" v-show="data.donation.type == 'Monetary'" v-for="option in data.donation.recurrencyOptions" required>
+                    <option value="{{option.value}}">{{option.label}}</option>
+                </select>
+                <br><br>
+                <input type="button" class="form-control btn btn-info col col-1" @click="create()" value="Create">
+                <input type="button" class="form-control btn btn-danger col col-1" @click="back()" value="Back">
+            </form>
+        </div>
+        <script src="scripts/popper.min.js"></script>
+        <script src="scripts/jquery-3.5.1.min.js"></script>
+        <script src="scripts/bootstrap.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+        <script src="scripts/createDonation.js"></script>
+    </body>
+</html>

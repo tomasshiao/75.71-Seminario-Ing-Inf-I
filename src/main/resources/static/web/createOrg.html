@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Create Organization</title>
+        <link rel="stylesheet" href="styles/bootstrap.min.css">
+        <link rel="stylesheet" href="styles/createOrganization.css">
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    </head>
+    <body>
+        <div id="createOrgForm">
+            <form class="form-inline row" id="create-org-form" onsubmit="return false">
+                <label for="organizationName" class="col col-1">Tipo de Donación: </label><input class="form-control col col-3" id="organizationName" name="organizationName" type="text" placeholder="OrganizationName"  required>
+                <br>
+                <h2>Admin User</h2>
+                <label for="adminUser" class="col col-1">Username: </label><input class="form-control col col-3" id="adminUser" name="adminUser" type="text" placeholder="Admin Username"  required>
+                <br>
+                <label for="adminPassword" class="col col-1" >Password: </label><input class="form-control col col-3" id="adminPassword" name="adminPassword" type="password" placeholder="Admin Password"  required>
+                <br><br>
+                <input type="button" class="form-control btn btn-info col col-1" @click="create()" value="Create">
+                <input type="button" class="form-control btn btn-danger col col-1" @click="back()" value="Back">
+            </form>
+        </div>
+        <script src="scripts/popper.min.js"></script>
+        <script src="scripts/jquery-3.5.1.min.js"></script>
+        <script src="scripts/bootstrap.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+        <script src="scripts/createOrg.js"></script>
+    </body>
+</html>

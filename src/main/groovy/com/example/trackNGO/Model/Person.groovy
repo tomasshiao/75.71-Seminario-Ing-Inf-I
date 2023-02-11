@@ -1,5 +1,6 @@
 package com.example.trackNGO.Model
 
+import javax.persistence.Entity
 import java.time.LocalDateTime
 
 interface Person {
@@ -7,4 +8,5 @@ interface Person {
     LocalDateTime getCreatedDate()
     String getName()
     Map<String, Object> toDTO()
+    Profile getProfile()
 }

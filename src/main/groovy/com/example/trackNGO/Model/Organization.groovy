@@ -8,7 +8,6 @@ import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.OneToMany
-import javax.transaction.InvalidTransactionException
 import java.time.LocalDateTime
 
 @Entity
@@ -23,7 +22,7 @@ class Organization {
     private BigDecimal balance
 
     @OneToMany(mappedBy = "organization", fetch = FetchType.EAGER)
-    private Set<OrganizationCollaborator> organizationCollaborators = new HashSet<OrganizationCollaborator>()
+    private Set<OrganizationPerson> organizationPersons = new HashSet<OrganizationPerson>()
 
     @OneToMany(mappedBy = "organization", fetch = FetchType.EAGER)
     private Set<OrganizationEvent> organizationEvents = new HashSet<OrganizationEvent>()
@@ -56,8 +55,8 @@ class Organization {
         this.balance
     }
 
-    HashSet<OrganizationCollaborator> getOrgCollaborators(){
-        this.organizationCollaborators
+    HashSet<OrganizationPerson> getOrgPersons(){
+        this.organizationPersons
     }
 
     HashSet<OrganizationEvent> getOrgEvents(){
@@ -68,8 +67,8 @@ class Organization {
         this.organizationTransactions
     }
 
-    HashSet<Collaborator> getOrgAdmins(){
-        this.organizationCollaborators.stream().filter(collaborator -> collaborator.getCollaborator().getProfile() == Profile.SYSADMIN) as HashSet<Collaborator>
+    HashSet<Person> getOrgAdmins(){
+        this.organizationPersons.stream().filter(collaborator -> collaborator.getPerson().getProfile() == Profile.SYSADMIN) as HashSet<Person>
     }
 
     BigDecimal setBalance(BigDecimal newBalance){
@@ -98,7 +97,7 @@ class Organization {
         [
                 "id": this.getId(),
                 "name": this.getName(),
-                "collaborators": this.getOrgCollaborators(),
+                "collaborators": this.getOrgPersons(),
                 "transactions": this.getOrgTransactions(),
                 "events": this.getOrgEvents(),
                 "admins": this.getOrgAdmins(),

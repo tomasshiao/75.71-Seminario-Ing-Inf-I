@@ -58,7 +58,9 @@ class OrganizationEvent {
                 "orgEventId": this.getId(),
                 "event": this.getEvent().toDTO(),
                 "createdDate": this.getCreatedDate(),
-                "organization": this.getOrganization().toDTO()
+                "organization": this.getOrganization().toDTO(),
+                "orgId": this.getOrganization().getId(),
+                "eventId": this.getEvent().getId()
         ] as Map<String, Object>
     }
 }

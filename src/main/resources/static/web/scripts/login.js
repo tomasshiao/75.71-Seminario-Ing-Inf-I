@@ -1,12 +1,12 @@
 var app = new Vue({
     el: "#app",
     data: {
-        user: ""
+        collaborator: ""
     },
     methods: {
         login(){
             var request = {
-                username: $("#username").val(),
+                username: $("#collaboratorName").val(),
                 password: $("#password").val()
             };
             $.post("/api/login", request)
@@ -27,7 +27,7 @@ var app = new Vue({
         },
         signup(){
             var request = {
-                userName: $("#username").val(),
+                username: $("#collaboratorName").val(),
                 password: $("#password").val()
             };
             $.post("/api/collaborators", request)
@@ -42,7 +42,7 @@ var app = new Vue({
                 })
                 .then(function(){
                     $.post("/api/login", {
-                        username: request.userName, 
+                        username: request.collaboratorName,
                         password: request.password
                     })
                         .done(function() {
@@ -70,7 +70,7 @@ var app = new Vue({
                         timer: 1500
                     });
                     location.reload();
-                    $("#username").val("");
+                    $("#collaboratorName").val("");
                     $("#password").val("");
                 })
                 .fail(function(){

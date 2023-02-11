@@ -19,14 +19,19 @@ class PersonDonation {
     @GenericGenerator(name = "native", strategy = "native")
     private Long id
     private LocalDateTime createdDate
+    private Person person
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="donation_id")
     private Donation donation
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="person_id")
-    private Person person
+    @JoinColumn(name="collaborator_id")
+    private Collaborator collaborator
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="friend_id")
+    private Friend friend
 
     @JsonIgnore
     Donation getDonation(){
@@ -40,9 +45,20 @@ class PersonDonation {
 
     PersonDonation(){}
 
-    PersonDonation(Donation donation, Person person){
+    PersonDonation(Donation donation, Collaborator collaborator){
         this.donation = donation
-        this.person = person
+        this.collaborator = collaborator
+        this.friend = null
+        this.person = collaborator
+        this.createdDate = LocalDateTime.now()
+        this
+    }
+
+    PersonDonation(Donation donation, Friend friend){
+        this.donation = donation
+        this.collaborator = null
+        this.friend = friend
+        this.person = friend
         this.createdDate = LocalDateTime.now()
         this
     }

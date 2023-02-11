@@ -2,5 +2,6 @@ package com.example.trackNGO.Model
 
 enum Profile {
     SYSADMIN,
-    VOLUNTEER
+    VOLUNTEER,
+    NOT_APPLICABLE
 }
