@@ -26,6 +26,7 @@ class Transaction {
     private String description
     private TransactionStatus status
     private String rejectionReason
+    private Long transactionNumber
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="organizationPerson_id")
@@ -38,7 +39,7 @@ class Transaction {
 
     Transaction(){}
 
-    Transaction(BigDecimal amount, TransactionType type){
+    Transaction(BigDecimal amount, TransactionType type, Long transactionNumber){
         LocalDateTime now = LocalDateTime.now()
         String nowString = String.valueOf(now)
         String noSymbolsNow = nowString.substring(0, 4) + nowString.substring(5,7) + nowString.substring(8,10) + nowString.substring(11,13)+nowString.substring(14,16)+nowString.substring(17,19) + nowString.substring(20,23)
@@ -49,19 +50,7 @@ class Transaction {
         this.status = TransactionStatus.PROCESSING
         this.rejectionReason = ""
         this.personTransaction  = null
-        this
-    }
-
-    Transaction(BigDecimal amount, TransactionType type, String description){
-        LocalDateTime now = LocalDateTime.now()
-        String nowString = String.valueOf(now)
-        String noSymbolsNow = nowString.substring(0, 4) + nowString.substring(5,7) + nowString.substring(8,10) + nowString.substring(11,13)+nowString.substring(14,16)+nowString.substring(17,19) + nowString.substring(20,23)
-        this.txnName = type.toString() + "-" + noSymbolsNow
-        this.createdDate = LocalDateTime.now()
-        this.type = type
-        this.amount = amount
-        this.description = description
-        this.personTransaction = null
+        this.transactionNumber = transactionNumber
         this
     }
 
@@ -87,6 +76,10 @@ class Transaction {
 
     String getTxnDescription(){
         this.description
+    }
+
+    String setTxnDescription(String description){
+        this.description = description
     }
 
     TransactionStatus updateStatus(TransactionStatus newStatus){

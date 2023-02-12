@@ -23,16 +23,18 @@ class Event{
     private EventType eventType
     private String eventName
     private LocalTime eventTime
+    private Long eventNumber
 
     Event(){}
 
-    Event(String eventName, String address, EventType eventType, LocalDate eventDate, LocalTime eventTime){
+    Event(String eventName, String address, EventType eventType, LocalDate eventDate, LocalTime eventTime, Long eventNumber){
         this.eventName = eventName
         this.address = address
         this.eventType = eventType
         this.eventDate = eventDate
         this.eventTime = eventTime
         this.createdDate = LocalDateTime.now()
+        this.eventNumber = eventNumber
         this
     }
 

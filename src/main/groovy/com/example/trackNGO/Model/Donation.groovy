@@ -26,6 +26,7 @@ class Donation {
     private DonationType donationType
     private DonationStatus status
     private BigDecimal amount
+    private Long donationNumber
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="organizationPerson_id")
@@ -36,7 +37,8 @@ class Donation {
 
     Donation(){}
 
-    Donation(DonationRecurrency recurrencyType, DonationType donationType, BigDecimal amount){
+    Donation(DonationRecurrency recurrencyType, DonationType donationType, BigDecimal amount, Long donationNumber){
+        this.donationNumber = donationNumber
         this.createdDate = LocalDateTime.now()
         if(donationType != DonationType.MONETARY){
             this.isRecurrent = false
@@ -92,9 +94,14 @@ class Donation {
         this.personDonation.getPerson()
     }
 
+    Long getDonationNumber(){
+        this.donationNumber
+    }
+
     Map<String, Object> toDTO(){
         [
                 "id": this.getId(),
+                "donationNumber": this.getDonationNumber(),
                 "createdDate": this.getCreatedDate(),
                 "isRecurrent": this.getIsRecurrent(),
                 "recurrencyType": this.getRecurrencyType(),

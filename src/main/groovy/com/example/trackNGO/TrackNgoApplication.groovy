@@ -57,7 +57,7 @@ class TrackNgoApplication {
                                CollaboratorRepository collaboratorRepository){
         (arg) -> {
             // Inicializo datos pre cargados
-            Event evento1 = new Event("Evento De Prueba", "Calle Falsa 123", EventType.CHARITY, LocalDate.now().plusDays(2), LocalTime.of(04,23))
+            Event evento1 = new Event("Evento De Prueba", "Calle Falsa 123", EventType.CHARITY, LocalDate.now().plusDays(2), LocalTime.of(04,23), 1)
             eventRepository.save(evento1)
 
             Organization org1 = new Organization("Organización Falsa")

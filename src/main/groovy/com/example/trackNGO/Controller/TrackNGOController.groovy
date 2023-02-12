@@ -117,11 +117,12 @@ class TrackNGOController {
         Person donor = (collaborator == null) ? friend : collaborator
         DonationType type = donationType.toUpperCase() as DonationType
         DonationRecurrency recurrency = donationRecurrency.toUpperCase() as DonationRecurrency
-        Donation donation = donationRepository.save(new Donation(recurrency, type, amount))
+        Long donationNumber = donationRepository.findAll().stream().count() + 1
+        Donation donation = donationRepository.save(new Donation(recurrency, type, amount, donationNumber))
         PersonDonation personDonation = personDonationRepository.save(new PersonDonation(donation, donor))
         Map<String,Object> response = new LinkedHashMap<>()
         if((DonationType.MONETARY == (donationType.toUpperCase() as DonationType))){
-            Transaction transaction = transactionRepository.save(new Transaction(amount, TransactionType.RECEIPT))
+            Transaction transaction = transactionRepository.save(new Transaction(amount, TransactionType.RECEIPT, 1))
             response.put("txnId", transaction.getId())
         }
         donation.setPersonDonation(personDonation)

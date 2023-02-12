@@ -1,10 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Create Transaction</title>
-</head>
-<body>
-
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <title>Create Transaction</title>
+        <link rel="stylesheet" href="styles/bootstrap.min.css">
+        <link rel="stylesheet" href="styles/createTxn.css">
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    </head>
+    <body>
+        <div id="createTxnForm">
+            <form class="form-inline row" id="create-org-form" onsubmit="return false">
+                <label for="transactionType" class="col col-1">Tipo de Donación: </label>
+                <select class="form-control col col-3" id="transactionType" name="transactionType" v-for="option in data.transaction.transactionOptions" required>
+                    <option value="{{option.value}}">{{option.label}}</option>
+                </select>
+                <br>
+                <label for="transactionAmount" class="col col-1" >Password: </label><input class="form-control col col-3" id="transactionAmount" name="transactionAmount" type="number" placeholder="Transaction Amount"  required>
+                <br><br>
+                <input type="button" class="form-control btn btn-info col col-1" @click="create()" value="Create">
+                <input type="button" class="form-control btn btn-danger col col-1" @click="back()" value="Back">
+            </form>
+        </div>
+        <script src="scripts/popper.min.js"></script>
+        <script src="scripts/jquery-3.5.1.min.js"></script>
+        <script src="scripts/bootstrap.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+        <script src="scripts/createTxn.js"></script>
+    </body>
 </html>
