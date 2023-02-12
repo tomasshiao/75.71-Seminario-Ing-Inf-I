@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
 import javax.persistence.OneToOne
 import java.time.LocalDateTime
+import java.util.stream.Collectors
 
 @Entity
 class Donation {
@@ -32,8 +33,8 @@ class Donation {
     @JoinColumn(name="organizationPerson_id")
     private OrganizationPerson organizationPerson
 
-    @OneToOne(mappedBy = "donation", fetch = FetchType.EAGER)
-    private PersonDonation personDonation
+    @OneToMany(mappedBy = "donation", fetch = FetchType.EAGER)
+    private Set<PersonDonation> personDonations = new HashSet<>()
 
     Donation(){}
 
@@ -82,16 +83,16 @@ class Donation {
         this.status
     }
 
-    PersonDonation getPersonDonation(){
-        this.personDonation
+    Set<PersonDonation> getPersonDonation(){
+        this.personDonations
     }
 
-    PersonDonation setPersonDonation(PersonDonation personDonation){
-        this.personDonation = personDonation
+    Set<PersonDonation> setPersonDonation(Set<PersonDonation> personDonations){
+        this.personDonations = personDonations
     }
 
     Person getDonor(){
-        this.personDonation.getPerson()
+        this.personDonations.stream().map(personDonation -> personDonation.getPerson()).collect(Collectors.toList()).get(0)
     }
 
     Long getDonationNumber(){

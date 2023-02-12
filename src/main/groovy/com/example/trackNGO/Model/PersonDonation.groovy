@@ -21,7 +21,7 @@ class PersonDonation {
     private Long id
     private LocalDateTime createdDate
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="donation_id")
     private Donation donation
 

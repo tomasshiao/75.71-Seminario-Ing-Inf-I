@@ -22,7 +22,7 @@ class PersonTransaction {
     private Long id
     private LocalDateTime createdDate
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="transaction_id")
     private Transaction transaction
 

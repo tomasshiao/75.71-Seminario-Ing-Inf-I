@@ -9,8 +9,10 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
+import javax.persistence.OneToMany
 import javax.persistence.OneToOne
 import java.time.LocalDateTime
+import java.util.stream.Collectors
 
 @Entity
 class Transaction {
@@ -32,9 +34,9 @@ class Transaction {
     @JoinColumn(name="organizationPerson_id")
     private OrganizationPerson organizationPerson
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name="personTransaction_id")
-    private PersonTransaction personTransaction
+    private Set<PersonTransaction> personTransactions = new HashSet<>()
 
 
     Transaction(){}
@@ -101,15 +103,15 @@ class Transaction {
     }
 
     Person getTxnPerson(){
-        this.personTransaction.getPerson()
+        this.personTransactions.stream().map(personTransaction -> personTransaction.getPerson()).collect(Collectors.toList()).get(0)
     }
 
-    PersonTransaction setPersonTransaction(PersonTransaction personTransaction){
-        this.personTransaction = personTransaction
+    Set<PersonTransaction> setPersonTransactions(Set<PersonTransaction> personTransactions){
+        this.personTransactions = personTransactions
     }
 
-    PersonTransaction getPersonTransaction(){
-        this.personTransaction
+    Set<PersonTransaction> getPersonTransactions(){
+        this.personTransactions
     }
 
     Map<String, Object> toDTO(){
