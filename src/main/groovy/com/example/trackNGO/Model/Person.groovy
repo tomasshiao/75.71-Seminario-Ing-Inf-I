@@ -7,5 +7,6 @@ interface Person {
     LocalDateTime getCreatedDate()
     String getName()
     Map<String, Object> toDTO()
+    Map<String, Object> toViewDTO()
     Profile getProfile()
 }

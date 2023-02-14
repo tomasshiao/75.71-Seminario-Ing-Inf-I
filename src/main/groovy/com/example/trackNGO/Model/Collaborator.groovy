@@ -22,9 +22,6 @@ class Collaborator extends AbstractPerson implements Person{
     private String collaboratorName
     private String password
 
-    @OneToMany(mappedBy = "collaborator", fetch = FetchType.EAGER)
-    private Set<PersonTransaction> personTransactions = new HashSet<>()
-
     Collaborator(){}
 
     Collaborator(String collaboratorName, String password, Profile profile){
@@ -60,12 +57,35 @@ class Collaborator extends AbstractPerson implements Person{
     }
 
     @Override
+    Map<String, Object> toViewDTO(){
+        [
+                "id": this.getId(),
+                "createdDate": this.getCreatedDate(),
+                "fields": [
+                        [
+                                "fieldName": "Name",
+                                "fieldValue": this.getName()
+                        ],
+                        [
+                                "fieldName": "Profile",
+                                "fieldValue": this.getProfile()
+                        ],
+                        [
+                                "fieldName": "Record type",
+                                "fieldValue": "Collaborator"
+                        ]
+                ]
+        ] as Map<String, Object>
+    }
+
+    @Override
     Map<String, Object> toDTO(){
         [
-                "collaboratorName": this.getName(),
-                "id": this.getId(),
-                "profile": this.getProfile(),
-                "createdDate": this.getCreatedDate()
+            "id": this.getId(),
+            "createdDate": this.getCreatedDate(),
+            "fullName": this.getName(),
+            "profile": this.getProfile(),
+            "recordType": "Collaborator"
         ] as Map<String, Object>
     }
 }

@@ -27,4 +27,6 @@ abstract class AbstractPerson{
     @OneToMany(mappedBy = "person", fetch = FetchType.EAGER)
     private Set<PersonDonation> personDonations = new HashSet<>()
 
+    @OneToMany(mappedBy = "person", fetch = FetchType.EAGER)
+    private Set<OrganizationPerson> organizationPersons = new HashSet<OrganizationPerson>()
 }

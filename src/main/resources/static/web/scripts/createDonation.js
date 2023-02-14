@@ -1,16 +1,21 @@
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 
-var createDonationForm = new Vue({
-    el:"#createDonationForm",
+const createDonationForm = new Vue({
+    el: "#createDonationForm",
     data: {
-        "donation": {}
+        donation: {}
     },
     methods: {
-        create(){
-            var postUri = "/api/donations/" + $("#donationType").val() + "/" + urlParams.get('donor') + "/" + $("#recurrency").val() + "/" + $("#amount").val();
-            $.post(postUri)
-                .done(function(data){
+        create() {
+            const request = {
+                "donationType": $("#donationType").val(),
+                "donorId": urlParams.get('donorId'),
+                "donationRecurrency": $("#recurrency").val(),
+                "amount": $("#amount").val()
+            }
+            $.post("/api/organization", request)
+                .done(function (data) {
                     swal.fire({
                         icon: 'success',
                         title: "Realizada Exitosa",
@@ -18,22 +23,24 @@ var createDonationForm = new Vue({
                         showConfirmButton: false,
                         timer: 1500
                     });
-                    window.location.href = '/api/donation/' + data.donationId;
+                    let donationId = data.donationId
+                    window.location.href = '/web/donation.html?id=' + donationId;
                 })
-                .fail(function() {
+                .fail(function (data) {
                     swal.fire({
                         icon: 'error',
                         title: "No se pudo realizar",
-                        text: "Ocurrió un error creando la donación.",
+                        text: "Ocurrió un error creando la donación.\n" + data.errorMsg,
                         showConfirmButton: true,
                         confirmButtonColor: '#3085d6',
                         confirmButtonText: 'OK'
                     });
                 })
         },
-        back(){
-            window.location.href = '/web/mainPage.html';
+        back() {
+            window.location.href = '/web/mainPage.html?orgId=' + urlParams.get('orgId');
         }
     },
-    created: function(){}
-})
+    created: function () {
+    }
+});

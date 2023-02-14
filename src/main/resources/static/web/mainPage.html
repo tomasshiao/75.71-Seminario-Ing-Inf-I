@@ -42,10 +42,10 @@
 
             <section class="row">
                 <div class="col col-12">
-                    <h1 id="orgName">{{data.organization.fields.Name}}</h1>
+                    <h1 id="orgName">{{organization.Name}}</h1>
                 </div>
                 <div class="col col-12">
-                    <h3>Welcome, {{data.person.fields.Name}}!</h3>
+                    <h3>Welcome, {{collaborator.fullName}}!</h3>
                 </div>
             </section>
 
@@ -54,39 +54,40 @@
                     <div class="row">
                         <section id="eventsRecord">
                             <h2>Eventos</h2>
-                            <section id="eventRecord" v-for="event in data.events">
+                            <section id="eventRecord" v-for="event in organization.events">
                                 <div v-bind:id="event.id" class="row">
-                                    <div class="col-6" @click="redirectToEvent(event.id)"><h3>{{event.fields.eventName}}</h3></div>
-                                    <div class="col-6"><h3>{{event.fields.eventDate}}, {{event.fields.eventTime}}, {{event.fields.address}}</h3></div>
+                                    <div class="col-6" @click="redirectToRecord('event', event.id)"><h3>{{event.eventName}}</h3></div>
+                                    <div class="col-6"><h3>{{event.eventDate}}, {{event.eventTime}}, {{event.address}}</h3></div>
                                 </div>
                             </section>
                         </section>
                         <section id="friendsRecords">
                             <h2>Amigos</h2>
-                            <section id="friendRecord" v-for="friend in data.friends">
+                            <section id="friendRecord" v-for="friend in organization.friends">
                                 <div v-bind:id="friend.id" class="row">
-                                    <div class="col-12" @click="redirectToFriend(friend.id)"><h3>{{friend.fields.fullName}}</h3></div>
+                                    <div class="col-12" @click="redirectToRecord('friend', friend.id)"><h3>{{friend.fullName}}</h3></div>
                                 </div>
                             </section>
                         </section>
                         <section id="donationsRecords">
                             <h2>Donaciones</h2>
-                            <section id="donationRecord" v-for="donation in data.donations">
+                            <section id="donationRecord" v-for="donation in organization.donations">
                                 <div v-bind:id="donation.id" class="row">
-                                    <div class="col-4" @click="redirectToDonation(donation.id)"><h3>{{donation.fields.donationNumber}}</h3></div>
-                                    <div class="col-4"><h3>{{donation.fields.donationType}}</h3></div>
-                                    <div class="col-4"><h3>{{donation.fields.status}}</h3></div>
+                                    <div class="col-4" @click="redirectToRecord('donation', donation.id)"><h3>{{donation.donationNumber}}</h3></div>
+                                    <div class="col-4"><h3>{{donation.donationType}}</h3></div>
+                                    <div class="col-4"><h3>{{donation.status}}</h3></div>
                                 </div>
                             </section>
                         </section>
                         <section id="transactionsRecords">
                             <h2>Transacciones</h2>
-                            <section id="transactionRecord" v-for="transaction in data.transactions">
+                            <section id="transactionRecord" v-for="transaction in organization.transactions">
                                 <div v-bind:id="transaction.id" class="row">
-                                    <div class="col-3" @click="redirectToTransaction(transaction.id)"><h3>{{transaction.fields.transactionNumber}}</h3></div>
-                                    <div class="col-3"><h3>{{transaction.fields.type}}</h3></div>
-                                    <div class="col-3"><h3>{{transaction.fields.amount}}</h3></div>
-                                    <div class="col-3"><h3>{{transaction.fields.status}}</h3></div>
+                                    <div class="col-3" @click="redirectToRecord('transaction', transaction.id)"><h3>{{transaction.transactionNumber}}</h3></div>
+                                    <div class="col-3"><h3>{{transaction.Name}}</h3></div>
+                                    <div class="col-3"><h3>{{transaction.type}}</h3></div>
+                                    <div class="col-3"><h3>{{transaction.amount}}</h3></div>
+                                    <div class="col-3"><h3>{{transaction.status}}</h3></div>
                                 </div>
                             </section>
                         </section>
@@ -95,7 +96,7 @@
                 <section class="col-4">
                     <section id="operations">
                         <h2>Gestiones</h2>
-                        <div v-for="operation in data.operations" class="row">
+                        <div v-for="operation in operations" class="row">
                             <button class="col col-2" @click="operation.invokeMethod">{{operation.name}}</button>
                         </div>
                     </section>

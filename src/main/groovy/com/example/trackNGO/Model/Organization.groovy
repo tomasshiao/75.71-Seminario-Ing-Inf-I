@@ -30,6 +30,9 @@ class Organization {
     @OneToMany(mappedBy = "organization", fetch = FetchType.EAGER)
     private Set<OrganizationTransaction> organizationTransactions = new HashSet<OrganizationTransaction>()
 
+    @OneToMany(mappedBy = "organization", fetch = FetchType.EAGER)
+    private Set<OrganizationDonation> organizationDonations = new HashSet<OrganizationDonation>()
+
     Organization(){}
 
     Organization(String name){
@@ -75,34 +78,21 @@ class Organization {
         this.balance = newBalance
     }
 
-    /*private updateBalance(Transaction txn){
-        TransactionType txnType = txn.getTxnType()
-        if(txnType == TransactionType.PAYMENT || txnType == TransactionType.PURCHASE){
-            if(txn.getTxnAmount() > this.balance){
-                txn.updateStatus(TransactionStatus.DENIED)
-                txn.setRejectionReason("Saldo Insuficiente")
-            } else {
-                this.balance -= txn.getTxnAmount()
-                txn.updateStatus(TransactionStatus.ACCEPTED)
-            }
-        } else if(txnType == TransactionType.RECEIPT || txnType == TransactionType.SALE){
-            this.balance += txn.getTxnAmount()
-            txn.updateStatus(TransactionStatus.ACCEPTED)
-        } else {
-            throw new InvalidTransactionException("Tipo de Transacción Inválido.")
-        }
-    }*/
+    HashSet<OrganizationDonation> getOrgDonations(){
+        this.organizationDonations
+    }
 
     Map<String, Object> toDTO(){
         [
                 "id": this.getId(),
-                "name": this.getName(),
+                "createdDate": this.getCreatedDate(),
                 "collaborators": this.getOrgPersons(),
                 "transactions": this.getOrgTransactions(),
                 "events": this.getOrgEvents(),
+                "donations": this.getOrgDonations(),
+                "name": this.getName(),
                 "admins": this.getOrgAdmins(),
-                "balance": this.getBalance(),
-                "createdDate": this.getCreatedDate()
+                "balance": this.getBalance()
         ] as Map<String, Object>
     }
 }

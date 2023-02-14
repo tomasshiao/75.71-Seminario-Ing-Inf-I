@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <title>Sign Up</title>
+      <link rel="stylesheet" href="styles/bootstrap.min.css">
+      <link rel="stylesheet" href="styles/signUp.css">
+      <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  </head>
+  <body>
+    <div id="signUp">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <h1 class="navbar-brand">trackNGO</h1>
+      </nav>
+      <!--div v-show="user == 'Guest'"-->
+      <div class="row">
+        <div id="formularioValidate" class="col col-8" v-if="validated === false">
+          <form class="form-inline row" id="validate-form" onsubmit="return false">
+            <label for="collaboratorNameValidation" class="col col-1">Name: </label><input class="form-control col col-3" id="collaboratorNameValidation" type="email" name="collaboratorName" placeholder="Name" required>
+            <br><br>
+            <input type="button" class="form-control btn btn-info col col-1" @click="validateName()" value="Validate">
+          </form>
+        </div>
+        <div id="formularioSignUp" class="col col-8" v-if="validated === true && userRegisteredInOrg === true">
+          <form class="form-inline row" id="signUp-form" onsubmit="return false">
+            <label for="collaboratorNameSignUp" class="col col-1">Name: </label><input class="form-control col col-3" id="collaboratorNameSignUp" type="email" name="collaboratorName" value="{{enteredName}}" readonly>
+            <p>Please set your password:</p>
+            <label for="password" class="col col-1">Password: </label><input class="form-control col col-3" id="password" type="password" name="password" placeholder="Your Password" required>
+            <br><br>
+            <input type="button" class="form-control btn btn-info col col-1" @click="signUp()" value="Sign Up">
+            <input type="button" class="form-control btn btn-info col col-1" @click="back()" value="Back">
+          </form>
+        </div>
+        <div id="errorMsg" class="col col-8" v-if="userRegisteredInOrg === false && validated === true">
+          <p style="color:red;">No te registraron en ninguna organización.</p>
+          <input type="button" class="form-control btn btn-info col col-1" @click="back()" value="Back">
+        </div>
+      </div>
+    </div>
+    <script src="scripts/popper.min.js"></script>
+    <script src="scripts/jquery-3.5.1.min.js"></script>
+    <script src="scripts/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <script src="scripts/signUp.js"></script>
+  </body>
+</html>

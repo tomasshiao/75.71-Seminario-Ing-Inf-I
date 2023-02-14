@@ -9,7 +9,7 @@
     </head>
     <body>
         <div id="personRecord">
-            <section id="record" v-for="field in data.record.fields">
+            <section id="record" v-for="field in person.fields">
                 <div v-bind:id="field.fieldName" class="row">
                     <div class="col-6"><h3>{{field.fieldName}}</h3></div>
                     <div class="col-6"><h3>{{field.fieldValue}}</h3></div>

@@ -11,7 +11,7 @@
         <div id="createTxnForm">
             <form class="form-inline row" id="create-org-form" onsubmit="return false">
                 <label for="transactionType" class="col col-1">Tipo de Donación: </label>
-                <select class="form-control col col-3" id="transactionType" name="transactionType" v-for="option in data.transaction.transactionOptions" required>
+                <select class="form-control col col-3" id="transactionType" name="transactionType" v-for="option in transaction.transactionOptions" required>
                     <option value="{{option.value}}">{{option.label}}</option>
                 </select>
                 <br>

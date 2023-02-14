@@ -9,13 +9,14 @@
     </head>
     <body>
         <div id="donationRecord">
-            <section id="record" v-for="field in data.record.fields">
+            <section id="record" v-for="field in donation.fields">
                 <div v-bind:id="field.fieldName" class="row">
                     <div class="col-6"><h3>{{field.fieldName}}</h3></div>
                     <div class="col-6"><h3>{{field.fieldValue}}</h3></div>
                 </div>
             </section>
         </div>
+        <input type="button" class="form-control btn btn-info col col-1" v-if="donation.isRecurrent === true" @click="calcelar()" value="Cancel Donation">
         <input type="button" class="form-control btn btn-info col col-1" @click="create()" value="Create">
         <input type="button" class="form-control btn btn-danger col col-1" @click="back()" value="Back">
         <script src="scripts/popper.min.js"></script>

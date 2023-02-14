@@ -3,9 +3,11 @@ package com.example.trackNGO.Model
 import org.hibernate.annotations.GenericGenerator
 
 import javax.persistence.Entity
+import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
+import javax.persistence.OneToMany
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -24,6 +26,9 @@ class Event{
     private String eventName
     private LocalTime eventTime
     private Long eventNumber
+
+    @OneToMany(mappedBy = "event", fetch = FetchType.EAGER)
+    private Set<OrganizationEvent> organizationEvents = new HashSet<OrganizationEvent>()
 
     Event(){}
 
@@ -66,7 +71,59 @@ class Event{
         this.eventName
     }
 
+    OrganizationEvent getOrganizationEvent(){
+        this.organizationEvents.first()
+    }
+
+    Long getEventNumber(){
+        this.eventNumber
+    }
+
+    Map<String, Object> toViewDTO(){
+        [
+                "id": this.getId(),
+                "createdDate": this.getCreatedDate(),
+                "fields": [
+                        [
+                                "fieldName": "Event Number",
+                                "fieldValue": this.getEventNumber()
+                        ],
+                        [
+                                "fieldName": "Event Name",
+                                "fieldValue": this.getEventName()
+                        ],
+                        [
+                                "fieldName": "Event Date",
+                                "fieldValue": this.getEventDate()
+                        ],
+                        [
+                                "fieldName": "Event Time",
+                                "fieldValue": this.getEventTime()
+                        ],
+                        [
+                                "fieldName": "Event Address",
+                                "fieldValue": this.getEventAddress()
+                        ],
+                        [
+                                "fieldName": "Event Type",
+                                "fieldValue": this.getEventType()
+                        ]
+                ],
+                "orgEvent": this.getOrganizationEvent()
+        ] as Map<String, Object>
+    }
+
     Map<String, Object> toDTO(){
-        ["id": this.getId(), "createdDate": this.getCreatedDate(), "eventDate": this.getEventDate(), "eventTime": this.getEventTime(), "eventAddress": this.getEventAddress(), "eventType": this.getEventType(), "eventName": this.getEventName()] as Map<String, Object>
+        [
+                "id": this.getId(),
+                "createdDate": this.getCreatedDate(),
+                "eventNumber": this.getEventNumber(),
+                "eventName": this.getEventName(),
+                "eventDate": this.getEventDate(),
+                "eventTime": this.getEventTime(),
+                "address": this.getEventAddress(),
+                "eventType": this.getEventType(),
+                "orgEvent": this.getOrganizationEvent()
+        ] as Map<String, Object>
     }
 }

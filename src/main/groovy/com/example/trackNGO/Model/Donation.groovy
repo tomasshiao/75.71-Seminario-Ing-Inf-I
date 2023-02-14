@@ -10,7 +10,6 @@ import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
-import javax.persistence.OneToOne
 import java.time.LocalDateTime
 import java.util.stream.Collectors
 
@@ -35,6 +34,9 @@ class Donation {
 
     @OneToMany(mappedBy = "donation", fetch = FetchType.EAGER)
     private Set<PersonDonation> personDonations = new HashSet<>()
+
+    @OneToMany(mappedBy = "donation", fetch = FetchType.EAGER)
+    private Set<OrganizationDonation> organizationDonations = new HashSet<OrganizationDonation>()
 
     Donation(){}
 
@@ -99,12 +101,22 @@ class Donation {
         this.donationNumber
     }
 
+    OrganizationPerson getOrganizationPerson(){
+        this.organizationPerson
+    }
+
+    OrganizationDonation getOrganizationDonation(){
+        this.organizationDonations.first()
+    }
+
     Map<String, Object> toDTO(){
         [
                 "id": this.getId(),
-                "donationNumber": this.getDonationNumber(),
                 "createdDate": this.getCreatedDate(),
+                "orgPerson": this.getOrganizationPerson(),
+                "orgDonation": this.getOrganizationDonation(),
                 "isRecurrent": this.getIsRecurrent(),
+                "donationNumber": this.getDonationNumber(),
                 "recurrencyType": this.getRecurrencyType(),
                 "donationType": this.getDonationType(),
                 "status": this.getStatus(),

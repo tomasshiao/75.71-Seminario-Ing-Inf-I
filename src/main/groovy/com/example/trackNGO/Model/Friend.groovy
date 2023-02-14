@@ -20,9 +20,6 @@ class Friend extends AbstractPerson implements Person{
     private LocalDateTime createdDate
     private String fullName
 
-    @OneToMany(mappedBy = "friend", fetch = FetchType.EAGER)
-    private Set<PersonTransaction> personTransactions = new HashSet<>()
-
     Friend(){}
 
     Friend(String fullName){
@@ -52,11 +49,36 @@ class Friend extends AbstractPerson implements Person{
     }
 
     @Override
-    Map<String, Object> toDTO(){
+    Map<String, Object> toViewDTO(){
         [
                 "friendName": this.getName(),
                 "id": this.getId(),
-                "createdDate": this.getCreatedDate()
+                "createdDate": this.getCreatedDate(),
+                "fields": [
+                        [
+                                "fieldName": "Name",
+                                "fieldValue": this.getName()
+                        ],
+                        [
+                                "fieldName": "Profile",
+                                "fieldValue": this.getProfile()
+                        ],
+                        [
+                                "fieldName": "Record type",
+                                "fieldValue": "Friend"
+                        ]
+                ]
+        ] as Map<String, Object>
+    }
+
+    @Override
+    Map<String, Object> toDTO() {
+        [
+                "id"         : this.getId(),
+                "createdDate": this.getCreatedDate(),
+                "fullName"   : this.getName(),
+                "profile"    : this.getProfile(),
+                "recordType" : "Friend"
         ] as Map<String, Object>
     }
 }

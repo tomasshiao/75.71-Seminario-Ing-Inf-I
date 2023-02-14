@@ -38,6 +38,8 @@ class Transaction {
     @JoinColumn(name="personTransaction_id")
     private Set<PersonTransaction> personTransactions = new HashSet<>()
 
+    @OneToMany(mappedBy = "transaction", fetch = FetchType.EAGER)
+    private Set<OrganizationTransaction> organizationTransactions = new HashSet<OrganizationTransaction>()
 
     Transaction(){}
 
@@ -51,7 +53,6 @@ class Transaction {
         this.amount = amount
         this.status = TransactionStatus.PROCESSING
         this.rejectionReason = ""
-        this.personTransaction  = null
         this.transactionNumber = transactionNumber
         this
     }
@@ -106,25 +107,76 @@ class Transaction {
         this.personTransactions.stream().map(personTransaction -> personTransaction.getPerson()).collect(Collectors.toList()).get(0)
     }
 
-    Set<PersonTransaction> setPersonTransactions(Set<PersonTransaction> personTransactions){
-        this.personTransactions = personTransactions
-    }
-
     Set<PersonTransaction> getPersonTransactions(){
         this.personTransactions
+    }
+    OrganizationPerson getOrganizationPerson(){
+        this.organizationPerson
+    }
+
+    OrganizationTransaction getTxnOrg(){
+        this.organizationTransactions.first()
+    }
+
+    Long getTransactionNumber(){
+        this.transactionNumber
+    }
+
+    Map<String, Object> toViewDTO(){
+        [
+                "txnId": this.getId(),
+                "createdDate": this.getCreatedDate(),
+                "orgTxn": this.getTxnOrg(),
+                "orgPerson": this.getOrganizationPerson(),
+                "personTxn": this.getPersonTransactions(),
+                "fields": [
+                        [
+                                "fieldName": "Name",
+                                "fieldValue": this.getName()
+                        ],
+                        [
+                                "fieldName": "Type",
+                                "fieldValue": this.getTxnType()
+                        ],
+                        [
+                                "fieldName": "Status",
+                                "fieldValue": this.getStatus()
+                        ],
+                        [
+                                "fieldName": "Transaction Person",
+                                "fieldValue": this.getTxnPerson().toDTO()
+                        ],
+                        [
+                                "fieldName": "Amount",
+                                "fieldValue": this.getTxnAmount()
+                        ],
+                        [
+                                "fieldName": "Description",
+                                "fieldValue": this.getTxnDescription()
+                        ],
+                        [
+                                "fieldName": "Rejection Reason",
+                                "fieldValue": this.getRejectionReason()
+                        ]
+                ]
+        ] as Map<String, Object>
     }
 
     Map<String, Object> toDTO(){
         [
-                "txnId": this.getId(),
-                "name": this.getName(),
-                "createdDate": this.getCreatedDate(),
-                "amount": this.getTxnAmount(),
-                "type": this.getTxnType(),
-                "description": this.getTxnDescription(),
-                "status": this.getStatus(),
-                "rejectionReason": this.getRejectionReason(),
-                "txnPerson": this.getTxnPerson().toDTO()
+            "txnId": this.getId(),
+            "createdDate": this.getCreatedDate(),
+            "orgTxn": this.getTxnOrg(),
+            "orgPerson": this.getOrganizationPerson(),
+            "personTxn": this.getPersonTransactions(),
+            "Name": this.getName(),
+            "type": this.getTxnType(),
+            "status": this.getStatus(),
+            "txnPerson": this.getTxnPerson().toDTO(),
+            "amount": this.getTxnAmount(),
+            "description": this.getTxnDescription(),
+            "rejectionReason": this.getRejectionReason(),
+            "transactionNumber": this.getTransactionNumber()
         ] as Map<String, Object>
     }
 }

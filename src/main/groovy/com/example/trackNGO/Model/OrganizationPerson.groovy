@@ -72,6 +72,16 @@ class OrganizationPerson {
         this.createdDate
     }
 
+    Set<Donation> addDonationToOrgPerson(Donation donation){
+        this.donations.add(donation)
+        this.donations
+    }
+
+    Set<Transaction> addTransactionToOrgPerson(Transaction transaction){
+        this.transactions.add(transaction)
+        this.transactions
+    }
+
     Map<String, Object> toDTO(){
         [
                 "orgId": this.getOrganization().getId(),
@@ -79,7 +89,9 @@ class OrganizationPerson {
                 "orgPersonId": this.getId(),
                 "person": this.getPerson().toDTO(),
                 "createdDate": this.getCreatedDate(),
-                "organization": this.getOrganization().toDTO()
+                "organization": this.getOrganization().toDTO(),
+                "orgPersonDonations": this.getDonations(),
+                "orgPersonTransactions": this.getTransactions()
         ] as Map<String, Object>
     }
 }
