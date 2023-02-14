@@ -1,4 +1,4 @@
-var app = new Vue({
+let app = new Vue({
     el: "#app",
     data: {
         collaborator: ""
@@ -6,13 +6,10 @@ var app = new Vue({
     methods: {
         login(){
             var request = {
-                username: $("#collaboratorName").val(),
+                username: $("#username").val(),
                 password: $("#password").val()
             };
-            $.post("/api/login", {
-                username: request.username,
-                password: request.password
-            })
+            $.post("/api/login", request)
                 .then(function(){
                     $.get("/api/collaborator/organization")
                 }).done(function(data){
@@ -29,6 +26,9 @@ var app = new Vue({
                         confirmButtonText: 'OK'
                     });
                 })
+        },
+        createOrg(){
+            window.location.href = '/web/createOrg.html';
         }
     },
     created: function(){}

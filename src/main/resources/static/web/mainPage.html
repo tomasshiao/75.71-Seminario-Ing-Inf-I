@@ -96,9 +96,10 @@
                 <section class="col-4">
                     <section id="operations">
                         <h2>Gestiones</h2>
-                        <div v-for="operation in operations" class="row">
-                            <button class="col col-2" @click="operation.invokeMethod">{{operation.name}}</button>
-                        </div>
+                        <button class="col col-2" @click="addCollaborator()">Add Collaborator</button>
+                        <button class="col col-2" @click="operation.invokeMethod">{{operation.name}}</button>
+                        <button class="col col-2" @click="operation.invokeMethod">{{operation.name}}</button>
+                        <button class="col col-2" @click="operation.invokeMethod">{{operation.name}}</button>
                     </section>
                 </section>
             </div>

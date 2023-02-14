@@ -15,10 +15,10 @@
                     <option value="{{option.value}}">{{option.label}}</option>
                 </select>
                 <br>
-                <label for="amount" class="col col-1" v-show="donation.type === 'Monetary'">Amount: </label><input class="form-control col col-3" id="amount" name="amount" type="number" placeholder="Amount"  v-show="donation.type === 'Monetary'" required>
+                <label for="amount" class="col col-1" v-if="donation.type === 'Monetary'">Amount: </label><input class="form-control col col-3" id="amount" name="amount" type="number" placeholder="Amount"  v-show="donation.type === 'Monetary'" required>
                 <br>
-                <label for="recurrency" class="col col-1" v-show="donation.type === 'Monetary'">Recurrency Period: </label>
-                <select class="form-control col col-3" id="recurrency" name="recurrency" v-show="donation.type === 'Monetary'" v-for="option in donation.recurrencyOptions" required>
+                <label for="recurrency" class="col col-1" v-if="donation.type === 'Monetary'">Recurrency Period: </label>
+                <select class="form-control col col-3" id="recurrency" name="recurrency" v-if="donation.type === 'Monetary'" v-for="option in donation.recurrencyOptions" required>
                     <option value="{{option.value}}">{{option.label}}</option>
                 </select>
                 <br><br>

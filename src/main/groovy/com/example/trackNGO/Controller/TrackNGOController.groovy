@@ -10,6 +10,7 @@ import com.example.trackNGO.Model.Organization
 import com.example.trackNGO.Model.OrganizationPerson
 import com.example.trackNGO.Model.Person
 import com.example.trackNGO.Model.PersonDonation
+import com.example.trackNGO.Model.Profile
 import com.example.trackNGO.Model.Transaction
 import com.example.trackNGO.Model.TransactionType
 import com.example.trackNGO.Repositories.DonationRepository
@@ -205,7 +206,7 @@ class TrackNGOController {
     }
 
     // Find new user sign up
-    @RequestMapping(path = "/api/findNewCollaborator/{name}", method = RequestMethod.GET)
+    @RequestMapping(path = "/findNewCollaborator/{name}", method = RequestMethod.GET)
     Map<String, Object> validateUserInOrg(@PathVariable String name){
         Map<String, Object> dto = new HashMap<String, Object>()
         Collaborator collaborator = collaboratorRepository.findByCollaboratorName(name)
@@ -230,14 +231,36 @@ class TrackNGOController {
         return dto
     }
 
-    // POST
+    // Get Organization names
+    @RequestMapping(path = "/organizations/names", method = RequestMethod.GET)
+    Map<String, Object> getOrgNames(){
+        Map<String, Object> dto = new HashMap<>()
+        List<String> orgNamesList = organizationRepository.findAll().stream()
+                .map(org -> org.getName())
+                .collect(Collectors.toList())
+        dto.put("orgNamesList", orgNamesList)
+        return dto
+    }
+
+    // Get Collaborator names
+    @RequestMapping(path = "/collaborators/names", method = RequestMethod.GET)
+    Map<String, Object> getCollaboratorsNames(){
+        Map<String, Object> dto = new HashMap<>()
+        List<String> takenUsernames = collaboratorRepository.findAll().stream()
+                .map(collaborator -> collaborator.getName())
+                .collect(Collectors.toList())
+        dto.put("takenUsernames", takenUsernames)
+        return dto
+    }
+
+    // POST - Creation of Records
     @RequestMapping(path = "/donations", method = RequestMethod.POST)
     ResponseEntity<Map<String, Object>> createDonation(@RequestParam String donationType, @RequestParam Long donorId, @RequestParam String donationRecurrency, @RequestParam BigDecimal amount, Authentication authentication){
         if(isGuest(authentication)){
             return new ResponseEntity<>(MakeMap("errorMsg", "Usuario no autenticado."), HttpStatus.FORBIDDEN)
         }
         if(donationType.isBlank() || donationType == "" || donationType == null || donorId == null || donationRecurrency.isBlank() || donationRecurrency == "" || donationRecurrency == null || amount == null){
-            return new ResponseEntity<>(MakeMap("errorMsg", "Parámetros Inválidos. Completar todos los campos necesarios."), HttpStatus.FORBIDDEN)
+            return new ResponseEntity<>(MakeMap("errorMsg", "Parámetros Inválidos. Completar todos los campos necesarios."), HttpStatus.BAD_REQUEST)
         }
         Collaborator collaborator = collaboratorRepository.findById(donorId).orElse(null)
         Friend friend = friendRepository.findById(donorId).orElse(null)
@@ -273,6 +296,30 @@ class TrackNGOController {
         return new ResponseEntity<>(response, HttpStatus.CREATED)
     }
 
+    @RequestMapping(path = "/collaborators/{orgId}/create", method = RequestMethod.POST)
+    ResponseEntity<Map<String, Object>> createCollaborator(@PathVariable Long orgId, @RequestParam String collaboratorName, @RequestParam String password, Authentication authentication){
+        if(isGuest(authentication)){
+            return new ResponseEntity<>(MakeMap("errorMsg", "Usuario no autenticado."), HttpStatus.FORBIDDEN)
+        }
+        if(collaboratorName.isBlank() || collaboratorName === "" || collaboratorName == null){
+            return new ResponseEntity<>(MakeMap("errorMsg", "Nombre de Usuario inválido"), HttpStatus.BAD_REQUEST)
+        }
+        if(collaboratorRepository.findByCollaboratorName(collaboratorName) != null){
+            return new ResponseEntity<>(MakeMap("errorMsg", "Nombre de Usuario ya existente"), HttpStatus.FORBIDDEN)
+        }
+        if(orgId == null || organizationRepository.findById(orgId) == null){
+            return new ResponseEntity<>(MakeMap("errorMsg", "No existe la organización"), HttpStatus.FORBIDDEN)
+        }
+        Collaborator collaborator = new Collaborator(collaboratorName, password)
+        collaboratorRepository.save(collaborator)
+        Organization organization = organizationRepository.findById(orgId).orElse(null)
+        OrganizationPerson organizationPerson = new OrganizationPerson(organization, collaborator)
+        organizationPersonRepository.save(organizationPerson)
+        Map<String,Object> response = new LinkedHashMap<>()
+        response.put("collaborator", collaborator.toDTO())
+        response.put("organizationPerson", organizationPerson.getId())
+        return new ResponseEntity<>(response, HttpStatus.CREATED)
+    }
 
     private static boolean isGuest(Authentication authentication) {
         return authentication == null || authentication instanceof AnonymousAuthenticationToken

@@ -10,7 +10,9 @@
     <body>
         <div id="createOrgForm">
             <form class="form-inline row" id="create-org-form" onsubmit="return false">
-                <label for="organizationName" class="col col-1">Tipo de Donación: </label><input class="form-control col col-3" id="organizationName" name="organizationName" type="text" placeholder="OrganizationName"  required>
+                <label for="organizationName" class="col col-1">Nombre de la Organización: </label><input class="form-control col col-3" id="organizationName" name="organizationName" type="text" placeholder="OrganizationName"  required>
+                <br>
+                <p v-show="nameTaken === true" style="color: red;">El nombre ingresado ya está registrado como una organización.</p>
                 <br>
                 <h2>Admin User</h2>
                 <label for="adminUser" class="col col-1">Username: </label><input class="form-control col col-3" id="adminUser" name="adminUser" type="text" placeholder="Admin Username"  required>
@@ -25,6 +27,6 @@
         <script src="scripts/jquery-3.5.1.min.js"></script>
         <script src="scripts/bootstrap.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-        <script src="scripts/createOrg.js"></script>
+        <script src="scripts/createOrganization.js"></script>
     </body>
 </html>

@@ -21,14 +21,16 @@ class Collaborator extends AbstractPerson implements Person{
     private Profile profile
     private String collaboratorName
     private String password
+    private Boolean passwordConfirmed
 
     Collaborator(){}
 
-    Collaborator(String collaboratorName, String password, Profile profile){
+    Collaborator(String collaboratorName, String password){
         this.collaboratorName = collaboratorName
         this.password = password
-        this.profile = profile
+        this.profile = Profile.VOLUNTEER
         this.createdDate = LocalDateTime.now()
+        this.passwordConfirmed = (password != null)
         this
     }
 
@@ -54,6 +56,14 @@ class Collaborator extends AbstractPerson implements Person{
     @Override
     Profile getProfile(){
         this.profile
+    }
+
+    Profile setProfile(Profile profile){
+        this.profile = profile
+    }
+
+    Boolean getPasswordConfirmed(){
+        this.passwordConfirmed
     }
 
     @Override
@@ -84,6 +94,7 @@ class Collaborator extends AbstractPerson implements Person{
             "id": this.getId(),
             "createdDate": this.getCreatedDate(),
             "fullName": this.getName(),
+            "passwordConfirmed": this.getPasswordConfirmed(),
             "profile": this.getProfile(),
             "recordType": "Collaborator"
         ] as Map<String, Object>
