@@ -1,20 +1,37 @@
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 
-const createTxnForm = new Vue({
+var createTxnForm = new Vue({
     el: "#createTxnForm",
     data: {
-        transaction: {}
+        transaction: {},
+        transactionOptions: [
+            {
+                label: "PURCHASE",
+                value: "Purchase"
+            },
+            {
+                label: "SALE",
+                value: "Sale"
+            },
+            {
+                label: "RECEIPT",
+                value: "Receipt"
+            },
+            {
+                label: "PAYMENT",
+                value: "Payment"
+            }
+        ]
     },
     methods: {
         create() {
-            const request = {
-                "transactionType": $("#transactionType").val(),
-                "transactionEntity": urlParams.get('orgId'), // Solamente se llama desde la página principal; las demás se crean a partir de las donaciones.
-                "donationRecurrency": $("#recurrency").val(),
-                "amount": $("#amount").val()
+            let request = {
+                transactionType: $("#transactionType").val(),
+                transactionEntity: urlParams.get('orgId'),
+                amount: $("#transactionAmount").val()
             }
-            $.post("/api/transactions", request)
+            $.post("/api/transactions/"+urlParams.get('orgId')+"/create", request)
                 .done(function (data) {
                     swal.fire({
                         icon: 'success',
@@ -23,8 +40,8 @@ const createTxnForm = new Vue({
                         showConfirmButton: false,
                         timer: 1500
                     });
-                    let txnId = data.txnId
-                    window.location.href = '/web/transaction.html?id=' + txnId;
+                    let txnId = data.transactionId
+                    window.location.href = '/web/transaction.html?id=' + txnId + '&orgId=' + urlParams.get('orgId');
                 })
                 .fail(function (data) {
                     swal.fire({
@@ -38,9 +55,8 @@ const createTxnForm = new Vue({
                 })
         },
         back() {
-            window.location.href = '/web/mainPage.html?orgId=' + urlParams.get('orgId');
+            window.location.href = '/web/mainPage.html?id=' + urlParams.get('orgId');
         }
     },
-    created: function () {
-    }
+    created: function () {}
 });

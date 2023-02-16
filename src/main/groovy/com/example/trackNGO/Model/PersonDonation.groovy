@@ -10,7 +10,6 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
-import javax.persistence.OneToOne
 import java.time.LocalDateTime
 
 @Entity
@@ -41,7 +40,7 @@ class PersonDonation {
 
     PersonDonation(){}
 
-    PersonDonation(Donation donation, Person person){
+    PersonDonation(Person person, Donation donation){
         this.donation = donation
         this.person = person
         this.createdDate = LocalDateTime.now()
@@ -56,12 +55,17 @@ class PersonDonation {
         this.createdDate
     }
 
+    String getPersonType(){
+        this.person.toDTO().get("recordType")
+    }
+
     Map<String, Object> toDTO(){
         [
                 "personDonationId": this.getId(),
-                "donation": this.getDonation().toDTO(),
+                "donationId": this.getDonation().getId(),
                 "createdDate": this.getCreatedDate(),
-                "person": this.getPerson().toDTO()
+                "personId": this.getPerson().getId(),
+                "personType": this.getPersonType()
         ] as Map<String, Object>
     }
 }

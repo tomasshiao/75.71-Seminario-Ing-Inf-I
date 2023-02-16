@@ -59,9 +59,9 @@ class OrganizationDonation {
     Map<String, Object> toDTO(){
         [
                 "orgDonationId": this.getId(),
-                "donation": this.getDonation().toDTO(),
+                "donationId": this.getDonation().getId(),
                 "createdDate": this.getCreatedDate(),
-                "organization": this.getOrganization().toDTO()
+                "organizationId": this.getOrganization().getId()
         ] as Map<String, Object>
     }
 

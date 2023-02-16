@@ -10,12 +10,12 @@
     <body>
         <div id="createTxnForm">
             <form class="form-inline row" id="create-org-form" onsubmit="return false">
-                <label for="transactionType" class="col col-1">Tipo de Donación: </label>
-                <select class="form-control col col-3" id="transactionType" name="transactionType" v-for="option in transaction.transactionOptions" required>
-                    <option value="{{option.value}}">{{option.label}}</option>
+                <label for="transactionType" class="col col-1">Tipo de Transacción: </label>
+                <select class="form-control col col-3" id="transactionType" name="transactionType" required>
+                    <option v-for="option in transactionOptions" :value="option.value">{{option.label}}</option>
                 </select>
                 <br>
-                <label for="transactionAmount" class="col col-1" >Password: </label><input class="form-control col col-3" id="transactionAmount" name="transactionAmount" type="number" placeholder="Transaction Amount"  required>
+                <label for="transactionAmount" class="col col-1" >Amount: </label><input class="form-control col col-3" id="transactionAmount" name="transactionAmount" type="number" placeholder="Transaction Amount"  required>
                 <br><br>
                 <input type="button" class="form-control btn btn-info col col-1" @click="create()" value="Create">
                 <input type="button" class="form-control btn btn-danger col col-1" @click="back()" value="Back">

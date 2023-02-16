@@ -10,10 +10,23 @@ let app = new Vue({
                 password: $("#password").val()
             };
             $.post("/api/login", request)
-                .then(function(){
-                    $.get("/api/collaborator/organization")
-                }).done(function(data){
-                    window.location.href="/web/mainPage.html?id=" + data.orgId
+                .then(function(data0){
+                    console.info("data GET", data0);
+                    $.get("/api/collaborator/organization", {username: $("#username").val()})
+                        .done(function(data){
+                            console.info("data GET", data);
+                            window.location.href="/web/mainPage.html?id=" + data.orgId;
+                    }).fail(function(data){
+                        console.log(data);
+                        swal.fire({
+                            icon: 'error',
+                            title: "Error.",
+                            text: "Ocurrió un error",
+                            showConfirmButton: true,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'OK'
+                        })
+                    })
                 })
                 .fail(function() {
                     console.log("login failed");

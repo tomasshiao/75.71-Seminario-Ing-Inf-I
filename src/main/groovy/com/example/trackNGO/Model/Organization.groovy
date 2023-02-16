@@ -9,6 +9,7 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.OneToMany
 import java.time.LocalDateTime
+import java.util.stream.Collectors
 
 @Entity
 class Organization {
@@ -70,10 +71,6 @@ class Organization {
         this.organizationTransactions
     }
 
-    HashSet<Person> getOrgAdmins(){
-        this.organizationPersons.stream().filter(collaborator -> collaborator.getPerson().getProfile() == Profile.SYSADMIN) as HashSet<Person>
-    }
-
     BigDecimal setBalance(BigDecimal newBalance){
         this.balance = newBalance
     }
@@ -82,14 +79,28 @@ class Organization {
         this.organizationDonations
     }
 
+    List<Collaborator> getCollaborators(){
+        this.getOrgPersons().stream()
+                .filter(op -> op.getPerson().toDTO().get("recordType") == "Collaborator")
+                .map(op -> op.getPerson().toDTO())
+                .collect(Collectors.toList())
+    }
+
+    List<Collaborator> getOrgAdmins(){
+        this.getOrgPersons().stream()
+                .filter(op -> (op.getPerson().toDTO().get("recordType") == "Collaborator" && op.getPerson().getProfile() == Profile.SYSADMIN))
+                .map(op -> op.getPerson().toDTO())
+                .collect(Collectors.toList())
+    }
+
     Map<String, Object> toDTO(){
         [
                 "id": this.getId(),
                 "createdDate": this.getCreatedDate(),
-                "collaborators": this.getOrgPersons(),
-                "transactions": this.getOrgTransactions(),
-                "events": this.getOrgEvents(),
-                "donations": this.getOrgDonations(),
+                "collaborators": this.getCollaborators(),
+                "transactions": this.getOrgTransactions().stream().map(orgTxn -> orgTxn.getTransaction().toDTO()).collect(Collectors.toList()),
+                "events": this.getOrgEvents().stream().map(orgEv -> orgEv.getEvent().toDTO()).collect(Collectors.toList()),
+                "donations": this.getOrgDonations().stream().map(orgDon -> orgDon.getDonation().toDTO()).collect(Collectors.toList()),
                 "name": this.getName(),
                 "admins": this.getOrgAdmins(),
                 "balance": this.getBalance()

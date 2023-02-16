@@ -1,7 +1,7 @@
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 
-const transactionRecord = new Vue({
+var transactionRecord = new Vue({
     el: "#transactionRecord",
     data: {
         transaction: {},
@@ -12,7 +12,7 @@ const transactionRecord = new Vue({
     },
     methods: {
         back() {
-            window.location.href = '/web/mainPage.html?orgId=' + urlParams.get('orgId');
+            window.location.href = '/web/mainPage.html?id=' + urlParams.get('orgId');
         }
     },
     created: function () {

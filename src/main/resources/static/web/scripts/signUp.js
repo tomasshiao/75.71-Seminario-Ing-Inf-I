@@ -3,7 +3,10 @@ const signUp = new Vue({
     data: {
         validated: false,
         userRegisteredInOrg: false,
-        enteredName: ""
+        enteredName: "",
+        orgId: null,
+        collaboratorId: null,
+        passwordConfirmed: false
     },
     methods: {
         back(){
@@ -12,16 +15,22 @@ const signUp = new Vue({
             $("#password").val = "";
             signUp.validated = false;
             signUp.userRegisteredInOrg = false;
-            signUp.enteredName = ""
-            location.reload()
+            signUp.enteredName = "";
+            signUp.orgId = null;
+            signUp.collaboratorId = null;
+            signUp.passwordConfirmed = false;
+            location.reload();
         },
         signUp(){
             const request = {
-                username: $("#collaboratorNameSignUp").val(),
-                password: $("#password").val(),
+                collaboratorId: signUp.collaboratorId,
+                orgId: signUp.orgId,
+                password: $("#password").val()
             };
-            $.post("/api/collaborators", request)
-                .done(function(){
+            $.post("/api/completeSignUp", request)
+                .done(function(data){
+                    signUp.collaboratorId = data.collaboratorId;
+                    signUp.orgId = data.orgId;
                     swal.fire({
                         icon:'success',
                         title: "Success.",
@@ -32,15 +41,12 @@ const signUp = new Vue({
                 })
                 .then(function(){
                     $.post("/api/login", {
-                        username: request.username,
-                        password: request.password
+                        username: signUp.enteredName,
+                        password: $("#password").val()
                     })
-                        .then(function(){
-                            $.get("/api/collaborator/organization")
-                        })
-                        .done(function(data){
-                            window.location.href="/web/mainPage.html?id=" + data.orgId
-                        })
+                        .done(function(){
+                        window.location.href="/web/mainPage.html?id=" + signUp.orgId
+                    })
                 })
                 .fail(function(data){
                     swal.fire({
@@ -58,8 +64,18 @@ const signUp = new Vue({
             $("#collaboratorNameSignUp").val = nameToValidate;
             $.get("/api/findNewCollaborator/" + nameToValidate)
                 .done(function(data){
-                signUp.validated = true;
-                signUp.userRegisteredInOrg = data.userRegisteredInOrg;
+                    if(data.errorMsg != null){
+                        signUp.back()
+                    } else {
+                        signUp.validated = true;
+                        signUp.userRegisteredInOrg = data.userRegisteredInOrg;
+                        if (data.userRegisteredInOrg) {
+                            signUp.enteredName = nameToValidate;
+                        }
+                        signUp.orgId = data.orgId;
+                        signUp.collaboratorId = data.collaboratorId;
+                        signUp.passwordConfirmed = data.passwordConfirmed;
+                    }
             })
         }
     },

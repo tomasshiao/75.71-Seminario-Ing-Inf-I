@@ -1,5 +1,6 @@
 package com.example.trackNGO.Model
 
+import com.example.trackNGO.Repositories.PersonTransactionRepository
 import org.hibernate.annotations.GenericGenerator
 
 import javax.persistence.Entity
@@ -26,6 +27,23 @@ class Friend extends AbstractPerson implements Person{
         this.fullName = fullName
         this.createdDate = LocalDateTime.now()
         this
+    }
+
+    @Override
+    String getRecordType(){
+        "Friend"
+    }
+
+    Set<OrganizationPerson> getOrganizationPersons(){
+        super.getOrganizationPersons()
+    }
+
+    Set<PersonDonation> getPersonDonations(){
+        super.getPersonDonations()
+    }
+
+    Set<PersonTransaction> getPersonTransactions(){
+        super.getPersonTransactions()
     }
 
     @Override
@@ -65,7 +83,7 @@ class Friend extends AbstractPerson implements Person{
                         ],
                         [
                                 "fieldName": "Record type",
-                                "fieldValue": "Friend"
+                                "fieldValue": this.getRecordType()
                         ]
                 ]
         ] as Map<String, Object>
@@ -78,7 +96,7 @@ class Friend extends AbstractPerson implements Person{
                 "createdDate": this.getCreatedDate(),
                 "fullName"   : this.getName(),
                 "profile"    : this.getProfile(),
-                "recordType" : "Friend"
+                "recordType" : this.getRecordType()
         ] as Map<String, Object>
     }
 }

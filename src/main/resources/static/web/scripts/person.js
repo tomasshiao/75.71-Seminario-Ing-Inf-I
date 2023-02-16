@@ -1,7 +1,7 @@
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 
-const personRecord = new Vue({
+var personRecord = new Vue({
     el: "#personRecord",
     data: {
         person: {},
@@ -10,8 +10,11 @@ const personRecord = new Vue({
         hasPermission: false
     },
     methods: {
+        createDonation(){
+            window.location.href = '/web/createDonation.html?orgId=' + urlParams.get('orgId') + '&donorId=' + personRecord.person.id;
+        },
         back() {
-            window.location.href = '/web/mainPage.html?orgId=' + urlParams.get('orgId');
+            window.location.href = '/web/mainPage.html?id=' + urlParams.get('orgId');
         }
     },
     created: function () {

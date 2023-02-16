@@ -9,4 +9,5 @@ interface Person {
     Map<String, Object> toDTO()
     Map<String, Object> toViewDTO()
     Profile getProfile()
+    String getRecordType()
 }

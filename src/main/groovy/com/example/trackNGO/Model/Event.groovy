@@ -109,7 +109,7 @@ class Event{
                                 "fieldValue": this.getEventType()
                         ]
                 ],
-                "orgEvent": this.getOrganizationEvent()
+                "orgEventId": this.getOrganizationEvent().getId()
         ] as Map<String, Object>
     }
 
@@ -123,7 +123,7 @@ class Event{
                 "eventTime": this.getEventTime(),
                 "address": this.getEventAddress(),
                 "eventType": this.getEventType(),
-                "orgEvent": this.getOrganizationEvent()
+                "orgEventId": this.getOrganizationEvent().getId()
         ] as Map<String, Object>
     }
 }

@@ -16,8 +16,8 @@
         <div class="row">
             <div id="formularioLogIn" class="col col-8">
                 <form class="form-inline row" id="login-form" onsubmit="return false">
-                    <label for="username" class="col col-1">Name: </label><input class="form-control col col-3" id="username" name="username" required>
-                    <label for="password" class="col col-1">Password: </label><input class="form-control col col-3" id="password" type="password" name="password" required>
+                    <label for="username" class="col col-1">Name: </label><input class="form-control col col-3" id="username" name="username"  @keyup.enter="login()" required>
+                    <label for="password" class="col col-1">Password: </label><input class="form-control col col-3" id="password" type="password" name="password" @keyup.enter="login()" required>
                     <br><br>
                     <input type="button" class="form-control btn btn-info col col-1" @click="login()" value="Log in">
                     <input type="button" class="form-control btn btn-info col col-1" @click="createOrg()" value="Create Org">

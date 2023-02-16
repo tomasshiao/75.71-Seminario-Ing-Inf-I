@@ -1,10 +1,18 @@
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+
 var mainPage = new Vue({
     el: "#mainPage",
     data: {
         organization: {},
+        collaborator: {},
         hasPermission: false,
         organizationExists: false,
-        takenUsernames: []
+        takenUsernames: [],
+        friends: [],
+        events: [],
+        transactions: [],
+        donations: []
     },
     methods: {
         logout(){
@@ -33,9 +41,8 @@ var mainPage = new Vue({
             const { value: email } = await Swal.fire({
                 title: 'Agregar Colaborador',
                 input: 'email',
-                inputLabel: 'Ingrese el usuario',
-                inputPlaceholder: 'Enter your email address',
-                showCancelButton: true,
+                inputLabel: 'Ingrese el usuario en formato de email',
+                inputPlaceholder: 'Ingrese el usuario en formato de email',
                 validationMessage: "Nombre de usuario inválido, debe ser de formato email.",
                 preConfirm: (email) => {
                     if (mainPage.takenUsernames.includes(email)) {
@@ -44,14 +51,16 @@ var mainPage = new Vue({
                 }
             })
             const request = {
-                "collaboratorName": email,
-                "password": null
+                collaboratorName: email,
+                password: null,
+                passwordConfirmed: false
             }
             $.post("/api/collaborators/"+urlParams.get('id')+"/create", request)
                 .done(function (data){
+                    mainPage.takenUsernames.push(request.collaboratorName);
                     swal.fire({
                         icon:'success',
-                        title: `Usuario ${data.collaborator.fullName} Creado`,
+                        title: `Usuario ${data.collaborator.fullName} creado`,
                         showConfirmButton: true,
                         html:
                             'El nuevo usuario puede ingresar en ' +
@@ -59,22 +68,77 @@ var mainPage = new Vue({
                             'para setear su contraseña',
                     });
             })
+        },
+        createEvent(){
+            window.location.href = '/web/createEvent.html?orgId='+urlParams.get("id");
+        },
+        async addFriend(){
+            const { value: email } = await Swal.fire({
+                title: 'Agregar Amigo',
+                input: 'email',
+                inputLabel: 'Ingrese el usuario',
+                inputPlaceholder: 'Ingrese el nombre del amigo en formato Email',
+                showCancelButton: true,
+                validationMessage: "Nombre inválido, debe ser de formato email."
+            })
+            const request = {
+                friendName: email
+            }
+            $.post("/api/friends/"+urlParams.get('id')+"/create", request)
+                .done(function (data){
+                    swal.fire({
+                        icon:'success',
+                        title: `Amigo ${data.friend.fullName} creado`,
+                        showConfirmButton: true
+                    });
+                    window.location.href = '/web/person.html?type=friend&orgId='+urlParams.get('id')+"&id="+data.friend.id;
+                })
+                .fail(function (data){
+                    swal.fire({
+                        icon: 'error',
+                        title: "No se pudo realizar",
+                        text: data.errorMsg,
+                        showConfirmButton: true,
+                        confirmButtonColor: '#e30c0c',
+                        confirmButtonText: 'OK'
+                    });
+                })
+        },
+        createOrgTxn(){
+            window.location.href = '/web/createTxn.html?orgId='+urlParams.get("id");
+        },
+        redirectToRecord(record, id){
+            if(record.toLowerCase() === 'friend' || record.toLowerCase() === 'collaborator'){
+                window.location.href = '/web/person.html?id=' + id + '&type=' +record+ '&orgId=' + +urlParams.get("id");
+            } else {
+                window.location.href = '/web/'+record+'.html?id=' + id + '&orgId=' + +urlParams.get("id");
+            }
         }
     },
     created: function(){
-        getOrgData()
+        getOrgData();
+        getCollaboratorNames();
     }
 });
 
 function getOrgData(){
     $.get('/api/organization/' + urlParams.get('id'))
         .done(function(data){
-            mainPage.organization = data.organization
-            mainPage.hasPermission = data.hasPermission
-            mainPage.organizationExists = data.organizationExists
+            mainPage.organization = data.organization;
+            mainPage.hasPermission = data.hasPermission;
+            mainPage.organizationExists = data.organizationExists;
+            mainPage.collaborator = data.collaborator;
+            mainPage.friends = data.friends;
+            mainPage.events = data.events;
+            mainPage.donations = data.donations;
+            mainPage.transactions = data.transactions;
+            console.info("Organization data", data)
         })
+}
 
-    $.get("/collaborators/names").done(function(data){
+function getCollaboratorNames(){
+    $.get('/api/collaborators/names')
+        .done(function(data){
         mainPage.takenUsernames = data.takenUsernames
     })
 }

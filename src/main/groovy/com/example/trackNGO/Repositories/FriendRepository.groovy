@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.repository.query.Param
 
 interface FriendRepository extends JpaRepository<Friend, Long>{
-    Friend findFriendByFullName(@Param("friendFullName") String fullName)
+    Friend findByFullName(@Param("fullName") String fullName)
 }

@@ -66,7 +66,7 @@ class Transaction {
     }
 
     String getName(){
-        this.name
+        this.txnName
     }
 
     BigDecimal getTxnAmount(){
@@ -104,14 +104,26 @@ class Transaction {
     }
 
     Person getTxnPerson(){
-        this.personTransactions.stream().map(personTransaction -> personTransaction.getPerson()).collect(Collectors.toList()).get(0)
+        this.personTransactions.stream()
+                .filter(personTxn -> personTxn.getTransaction().getId() == this.id)
+                .collect(Collectors.toList())
+                .first().getPerson()
     }
 
     Set<PersonTransaction> getPersonTransactions(){
         this.personTransactions
     }
+
+    Set<PersonTransaction> setPersonTransaction(Set<PersonTransaction> personTransactions){
+        this.personTransactions = personTransactions
+    }
+
     OrganizationPerson getOrganizationPerson(){
         this.organizationPerson
+    }
+
+    OrganizationPerson setOrganizationPerson(OrganizationPerson orgPerson){
+        this.organizationPerson = orgPerson
     }
 
     OrganizationTransaction getTxnOrg(){
@@ -126,9 +138,8 @@ class Transaction {
         [
                 "txnId": this.getId(),
                 "createdDate": this.getCreatedDate(),
-                "orgTxn": this.getTxnOrg(),
-                "orgPerson": this.getOrganizationPerson(),
-                "personTxn": this.getPersonTransactions(),
+                "orgTxnId": this.getTxnOrg().getId(),
+                "personTxnIdSet": this.getPersonTransactions().forEach(x -> x.getId()),
                 "fields": [
                         [
                                 "fieldName": "Name",
@@ -144,7 +155,7 @@ class Transaction {
                         ],
                         [
                                 "fieldName": "Transaction Person",
-                                "fieldValue": this.getTxnPerson().toDTO()
+                                "fieldValue": this.getTxnPerson().getName()
                         ],
                         [
                                 "fieldName": "Amount",
@@ -166,13 +177,12 @@ class Transaction {
         [
             "txnId": this.getId(),
             "createdDate": this.getCreatedDate(),
-            "orgTxn": this.getTxnOrg(),
-            "orgPerson": this.getOrganizationPerson(),
-            "personTxn": this.getPersonTransactions(),
+            "orgTxnId": this.getTxnOrg().getId(),
+            "personTxnIdSet": this.getPersonTransactions().forEach(x -> x.getId()),
             "Name": this.getName(),
             "type": this.getTxnType(),
             "status": this.getStatus(),
-            "txnPerson": this.getTxnPerson().toDTO(),
+            "txnPersonId": this.getTxnPerson().getId(),
             "amount": this.getTxnAmount(),
             "description": this.getTxnDescription(),
             "rejectionReason": this.getRejectionReason(),

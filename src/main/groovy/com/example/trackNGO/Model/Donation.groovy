@@ -94,7 +94,11 @@ class Donation {
     }
 
     Person getDonor(){
-        this.personDonations.stream().map(personDonation -> personDonation.getPerson()).collect(Collectors.toList()).get(0)
+        if(this.personDonations.isEmpty()){
+            return null
+        } else {
+            return this.personDonations.first().getPerson()
+        }
     }
 
     Long getDonationNumber(){
@@ -105,22 +109,61 @@ class Donation {
         this.organizationPerson
     }
 
+    OrganizationPerson setOrganizationPerson(OrganizationPerson orgPerson){
+        this.organizationPerson = orgPerson
+    }
+
     OrganizationDonation getOrganizationDonation(){
         this.organizationDonations.first()
+    }
+
+    Map<String, Object> toViewDTO(){
+        [
+                "id": this.getId(),
+                "createdDate": this.getCreatedDate(),
+                "orgDonationId": this.getOrganizationDonation().getId(),
+                "personDonationIdSet": this.getPersonDonation().forEach(x -> x.getId()),
+                "donorId": this.getDonor()?.getId(),
+                "fields": [
+                        [
+                            "fieldName": "Is Recurrent",
+                            "fieldValue": this.getIsRecurrent()
+                        ],
+                        [
+                                "fieldName": "Donation Number",
+                                "fieldValue": this.getDonationNumber()
+                        ],
+                        [
+                                "fieldName": "Recurrency Type",
+                                "fieldValue": this.getRecurrencyType()
+                        ],
+                        [
+                                "fieldName": "Donation Type",
+                                "fieldValue": this.getDonationType()
+                        ],
+                        [
+                                "fieldName": "Status",
+                                "fieldValue": this.getStatus()
+                        ],
+                        [
+                                "fieldName": "Donor",
+                                "fieldValue": this.getDonor()?.getName()
+                        ]
+                ]
+        ] as Map<String, Object>
     }
 
     Map<String, Object> toDTO(){
         [
                 "id": this.getId(),
                 "createdDate": this.getCreatedDate(),
-                "orgPerson": this.getOrganizationPerson(),
-                "orgDonation": this.getOrganizationDonation(),
+                "orgDonationId": this.getOrganizationDonation().getId(),
+                "personDonationIdSet": this.getPersonDonation().forEach(x -> x.getId()),
                 "isRecurrent": this.getIsRecurrent(),
                 "donationNumber": this.getDonationNumber(),
                 "recurrencyType": this.getRecurrencyType(),
                 "donationType": this.getDonationType(),
-                "status": this.getStatus(),
-                "donor": this.getDonor().toDTO()
+                "status": this.getStatus()
         ] as Map<String, Object>
     }
 }

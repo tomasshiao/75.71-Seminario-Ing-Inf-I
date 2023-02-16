@@ -82,14 +82,17 @@ class OrganizationPerson {
         this.transactions
     }
 
+    String getPersonType(){
+        this.person.toDTO().get("recordType")
+    }
+
     Map<String, Object> toDTO(){
         [
                 "orgId": this.getOrganization().getId(),
                 "personId": this.getPerson().getId(),
+                "personType": this.getPersonType(),
                 "orgPersonId": this.getId(),
-                "person": this.getPerson().toDTO(),
                 "createdDate": this.getCreatedDate(),
-                "organization": this.getOrganization().toDTO(),
                 "orgPersonDonations": this.getDonations(),
                 "orgPersonTransactions": this.getTransactions()
         ] as Map<String, Object>

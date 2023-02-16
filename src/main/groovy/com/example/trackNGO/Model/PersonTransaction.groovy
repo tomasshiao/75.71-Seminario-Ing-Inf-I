@@ -42,7 +42,7 @@ class PersonTransaction {
 
     PersonTransaction(){}
 
-    PersonTransaction(Transaction transaction, Person person){
+    PersonTransaction(Person person, Transaction transaction){
         this.transaction = transaction
         this.person = person
         this.createdDate = LocalDateTime.now()
@@ -57,12 +57,17 @@ class PersonTransaction {
         this.createdDate
     }
 
+    String getPersonType(){
+        this.person.toDTO().get("recordType")
+    }
+
     Map<String, Object> toDTO(){
         [
                 "personTransactionId": this.getId(),
-                "transaction": this.getTransaction().toDTO(),
+                "transactionId": this.getTransaction().getId(),
                 "createdDate": this.getCreatedDate(),
-                "person": this.getPerson().toDTO()
+                "personId": this.getPerson().getId(),
+                "personType": this.getPersonType()
         ] as Map<String, Object>
     }
 }

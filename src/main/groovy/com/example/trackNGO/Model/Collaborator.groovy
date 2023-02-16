@@ -25,13 +25,30 @@ class Collaborator extends AbstractPerson implements Person{
 
     Collaborator(){}
 
-    Collaborator(String collaboratorName, String password){
+    Collaborator(String collaboratorName, String password, Profile profile, Boolean passwordConfirmed){
         this.collaboratorName = collaboratorName
         this.password = password
-        this.profile = Profile.VOLUNTEER
+        this.profile = profile
         this.createdDate = LocalDateTime.now()
-        this.passwordConfirmed = (password != null)
+        this.passwordConfirmed = passwordConfirmed
         this
+    }
+
+    @Override
+    String getRecordType(){
+        "Collaborator"
+    }
+
+    Set<OrganizationPerson> getOrganizationPersons(){
+        super.getOrganizationPersons()
+    }
+
+    Set<PersonDonation> getPersonDonations(){
+        super.getPersonDonations()
+    }
+
+    Set<PersonTransaction> getPersonTransactions(){
+        super.getPersonTransactions()
     }
 
     @Override
@@ -53,14 +70,19 @@ class Collaborator extends AbstractPerson implements Person{
         this.password
     }
 
+    String setPassword(String password){
+        this.password = password
+        this.passwordConfirmed = (password != null)
+    }
+
     @Override
     Profile getProfile(){
         this.profile
     }
 
-    Profile setProfile(Profile profile){
+    /*Profile setProfile(Profile profile){
         this.profile = profile
-    }
+    }*/
 
     Boolean getPasswordConfirmed(){
         this.passwordConfirmed
@@ -82,7 +104,7 @@ class Collaborator extends AbstractPerson implements Person{
                         ],
                         [
                                 "fieldName": "Record type",
-                                "fieldValue": "Collaborator"
+                                "fieldValue": this.getRecordType()
                         ]
                 ]
         ] as Map<String, Object>
@@ -96,7 +118,7 @@ class Collaborator extends AbstractPerson implements Person{
             "fullName": this.getName(),
             "passwordConfirmed": this.getPasswordConfirmed(),
             "profile": this.getProfile(),
-            "recordType": "Collaborator"
+            "recordType": this.getRecordType()
         ] as Map<String, Object>
     }
 }

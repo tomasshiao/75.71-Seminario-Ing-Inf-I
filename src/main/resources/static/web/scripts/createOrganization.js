@@ -1,28 +1,35 @@
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 
-const createOrgForm = new Vue({
+var createOrgForm = new Vue({
     el: "#createOrgForm",
     data: {
         organization: {},
         orgNamesList: [],
-        nameTaken: false
+        nameTaken: false,
+        redirectOrgId: null
     },
     methods: {
         create() {
             const inputName = $("#organizationName").val();
             if(createOrgForm.orgNamesList.includes(inputName.toLowerCase())){
                 createOrgForm.nameTaken = true;
+                swal.fire({
+                    icon: 'error',
+                    title: 'Nombre en uso',
+                    text: "Este nombre ya se encuentra en uso.",
+                    showConfirmButton: true
+                })
             } else {
                 const request = {
-                    "orgName": inputName,
-                    "adminUser": {
-                        "username": $("#adminUser").val(),
-                        "password": $("#adminPassword").val()
+                    orgName: inputName,
+                    adminUser: {
+                        username: $("#adminUser").val(),
+                        password: $("#adminPassword").val()
                     }
                 }
-                $.post("/api/organization", request)
-                    .done(function (data) {
+                $.post("/api/organization/create", request)
+                    .then(function (data) {
                         swal.fire({
                             icon: 'success',
                             title: "Realizada Exitosa",
@@ -30,8 +37,13 @@ const createOrgForm = new Vue({
                             showConfirmButton: false,
                             timer: 1500
                         });
-                        let donationId = data.orgId
-                        window.location.href = '/web/mainPage.html?orgId=' + donationId;
+                        createOrgForm.redirectOrgId = data.orgId;
+                    })
+                    .then(function(){
+                        $.post("/api/login", {username: $("#adminUser").val(), password:$("#adminPassword").val()})
+                    })
+                    .done(function(){
+                        window.location.href = '/web/mainPage.html?orgId=' + createOrgForm.redirectOrgId;
                     })
                     .fail(function (data) {
                         swal.fire({

@@ -29,4 +29,17 @@ abstract class AbstractPerson{
 
     @OneToMany(mappedBy = "person", fetch = FetchType.EAGER)
     private Set<OrganizationPerson> organizationPersons = new HashSet<OrganizationPerson>()
+
+    Set<OrganizationPerson> getOrganizationPersons(){
+        this.organizationPersons
+    }
+
+    Set<PersonDonation> getPersonDonations(){
+        this.personDonations
+    }
+
+    Set<PersonTransaction> getPersonTransactions(){
+        this.personTransactions
+    }
+
 }

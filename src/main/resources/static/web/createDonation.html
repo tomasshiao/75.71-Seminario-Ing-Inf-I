@@ -11,15 +11,15 @@
         <div id="createDonationForm">
             <form class="form-inline row" id="create-donation-form" onsubmit="return false">
                 <label for="donationType" class="col col-1">Tipo de Donación: </label>
-                <select class="form-control col col-3" id="donationType" name="donationType" v-for="option in donation.donationOptions" required>
-                    <option value="{{option.value}}">{{option.label}}</option>
+                <select class="form-control col col-3" id="donationType" name="donationType" @change="updateType($event)" required>
+                    <option v-for="option in donationOptions" :value="option.value">{{option.label}}</option>
                 </select>
                 <br>
-                <label for="amount" class="col col-1" v-if="donation.type === 'Monetary'">Amount: </label><input class="form-control col col-3" id="amount" name="amount" type="number" placeholder="Amount"  v-show="donation.type === 'Monetary'" required>
+                <label for="amount" class="col col-1" v-if="type === 'Monetary'">Amount: </label><input class="form-control col col-3" id="amount" name="amount" type="number" placeholder="Amount"  v-show="type === 'Monetary'" required>
                 <br>
-                <label for="recurrency" class="col col-1" v-if="donation.type === 'Monetary'">Recurrency Period: </label>
-                <select class="form-control col col-3" id="recurrency" name="recurrency" v-if="donation.type === 'Monetary'" v-for="option in donation.recurrencyOptions" required>
-                    <option value="{{option.value}}">{{option.label}}</option>
+                <label for="recurrency" class="col col-1" v-if="type === 'Monetary'">Recurrency Period: </label>
+                <select class="form-control col col-3" id="recurrency" name="recurrency" v-if="type === 'Monetary'" required>
+                    <option v-for="option in recurrencyOptions" :value="option.value">{{option.label}}</option>
                 </select>
                 <br><br>
                 <input type="button" class="form-control btn btn-info col col-1" @click="create()" value="Create">

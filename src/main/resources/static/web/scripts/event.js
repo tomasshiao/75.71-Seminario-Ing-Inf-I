@@ -1,7 +1,7 @@
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 
-const eventRecord = new Vue({
+var eventRecord = new Vue({
     el: "#eventRecord",
     data: {
         event: {},
@@ -11,7 +11,7 @@ const eventRecord = new Vue({
     },
     methods: {
         back() {
-            window.location.href = '/web/mainPage.html?orgId=' + urlParams.get('orgId');
+            window.location.href = '/web/mainPage.html?id=' + urlParams.get('orgId');
         }
     },
     created: function () {
