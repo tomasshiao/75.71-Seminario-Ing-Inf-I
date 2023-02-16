@@ -4,85 +4,93 @@
         <meta charset="UTF-8">
         <title>Home</title>
         <link rel="stylesheet" href="styles/bootstrap.min.css">
+        <link rel="stylesheet" href="styles/mainPage.css">
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     </head>
     <body>
         <div id="mainPage">
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <a class="navbar-brand" href="#">trackNGO</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item">
-                            <input type="button" class="btn btn-danger"  @click="logout()" value="Log out">
-                        </li>
-                    </ul>
-                </div>
+                <a class="navbar-brand me-auto" href="#">trackNGO</a>
+                <span class="mx-auto">
+                    <span class="navbar-text navText">
+                        Organización: {{organization.name}}
+                    </span>
+                    <span class="navbar-text navText">
+                        Collaborator: <a @click="redirectToRecord('collaborator', collaborator.id)">{{collaborator.fullName}}</a>
+                    </span>
+                </span>
+                <form class="form-inline my-2 my-lg-0 ms-auto logout">
+                    <button class="btn btn-outline-danger my-2 my-sm-0" @click="logout()">Log out</button>
+                </form>
             </nav>
-
-            <section class="row">
-                <div class="col col-12">
-                    <h1 id="orgName">{{organization.Name}}</h1>
-                </div>
-                <div class="col col-12">
-                    <h3>Welcome, {{collaborator.fullName}}!</h3>
-                </div>
-            </section>
 
             <div class="row">
                 <section class="col-8">
                     <div class="row">
-                        <section id="eventsRecord">
-                            <h2>Eventos</h2>
-                            <section id="eventRecord">
-                                <div v-for="event in events" v-bind:id="event.id" class="row">
-                                    <div class="col-6" @click="redirectToRecord('event', event.id)"><p>{{event.eventName}}</p></div>
-                                    <div class="col-6"><p>{{event.eventDate}}, {{event.eventTime}}, {{event.address}}</p></div>
-                                </div>
-                            </section>
+                        <section id="eventsRecords">
+                        <h2>Eventos</h2>
+                            <table id="events" class="table table-striped">
+                                <thead>
+                                    <tr class="table-primary"><th>Event Name</th><th>Date</th><th>Time</th><th>Address</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="evento in events" v-bind:id="'evento' + evento.id">
+                                        <td @click="redirectToRecord('event', evento.id)">{{evento.eventName}}</td>
+                                        <td>{{evento.eventDate}}</td>
+                                        <td>{{evento.eventTime}}</td>
+                                        <td>{{evento.address}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </section>
                         <section id="friendsRecords">
                             <h2>Amigos</h2>
-                            <section id="friendRecord">
-                                <div v-for="friend in friends" v-bind:id="friend.id" class="row">
-                                    <div class="col-12" @click="redirectToRecord('friend', friend.id)"><p>{{friend.fullName}}</p></div>
-                                </div>
-                            </section>
+                            <table id="friendRecord" class="table table-striped">
+                                <thead>
+                                    <tr class="table-primary"><th>Nombre</th></tr>
+                                </thead>
+                                <tr v-for="friend in friends" v-bind:id="'amigo' + friend.id">
+                                    <td @click="redirectToRecord('friend', friend.id)">{{friend.fullName}}</td>
+                                </tr>
+                            </table>
                         </section>
                         <section id="donationsRecords">
                             <h2>Donaciones</h2>
-                            <section id="donationRecord">
-                                <div v-for="donation in donations" v-bind:id="donation.id" class="row">
-                                    <div class="col-4" @click="redirectToRecord('donation', donation.id)"><p>{{donation.donationNumber}}</p></div>
-                                    <div class="col-4"><p>{{donation.donationType}}</p></div>
-                                    <div class="col-4"><p>{{donation.status}}</p></div>
-                                </div>
-                            </section>
+                            <table id="donationRecord" class="table table-striped">
+                                <thead>
+                                    <tr class="table-primary"><th>Donation Number</th><th>Type</th><th>Status</th></tr>
+                                </thead>
+                                <tr v-for="donation in donations" v-bind:id="'donacion'+donation.id">
+                                    <td class="col-4" @click="redirectToRecord('donation', donation.id)">{{donation.donationNumber}}</td>
+                                    <td class="col-4">{{donation.donationType}}</td>
+                                    <td class="col-4">{{donation.status}}</td>
+                                </tr>
+                            </table>
                         </section>
                         <section id="transactionsRecords">
                             <h2>Transacciones</h2>
-                            <section id="transactionRecord">
-                                <div v-for="transaction in transactions" v-bind:id="transaction.txnId" class="row">
-                                    <div class="col-3" @click="redirectToRecord('transaction', transaction.txnId)"><h3>{{transaction.transactionNumber}}</h3></div>
-                                    <div class="col-3"><p>{{transaction.Name}}</p></div>
-                                    <div class="col-3"><p>{{transaction.type}}</p></div>
-                                    <div class="col-3"><p>{{transaction.amount}}</p></div>
-                                    <div class="col-3"><p>{{transaction.status}}</p></div>
-                                </div>
-                            </section>
+                            <table id="transactionRecord" class="table table-striped">
+                                <thead>
+                                    <tr class="table-primary"><th>Transaction Number</th><th>Name</th><th>Type</th><th>Amount</th><th>Status</th></tr>
+                                </thead>
+                                <tr v-for="transaction in transactions" v-bind:id="'transaccion' + transaction.txnId">
+                                    <td class="col-3" @click="redirectToRecord('transaction', transaction.txnId)">{{transaction.transactionNumber}}</td>
+                                    <td class="col-3">{{transaction.Name}}</td>
+                                    <td class="col-3">{{transaction.type}}</td>
+                                    <td class="col-3">{{transaction.amount}}</td>
+                                    <td class="col-3">{{transaction.status}}</td>
+                                </tr>
+                            </table>
                         </section>
                     </div>
                 </section>
                 <section class="col-4">
                     <section id="operations">
                         <h2>Gestiones</h2>
-                        <button class="col col-2" @click="addCollaborator()">Add Collaborator</button>
-                        <button class="col col-2" @click="createEvent()">Create Event</button>
-                        <button class="col col-2" @click="addFriend()">Add Friend</button>
-                        <button class="col col-2" @click="createOrgTxn()">Create Organization Transaction</button>
+                        <button class="row btn btn-outline-info boton" @click="addCollaborator()">Add Collaborator</button> <br>
+                        <button class="row btn btn-outline-info boton" @click="createEvent()">Create Event</button> <br>
+                        <button class="row btn btn-outline-info boton" @click="addFriend()">Add Friend</button> <br>
+                        <button class="row btn btn-outline-info boton" @click="createOrgTxn()">Create Organization Transaction</button>
                     </section>
                 </section>
             </div>
