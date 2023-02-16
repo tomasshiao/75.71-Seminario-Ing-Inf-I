@@ -150,8 +150,10 @@ class TrackNGOController {
                 dto.put("donation", donation.toViewDTO())
                 dto.put("status", donation.getStatus().toString())
                 dto.put("organization", org.toDTO())
+                dto.put("orgId", org.getId())
                 dto.put("donor", donor?.toDTO())
                 dto.put("isRecurrent", donation.getIsRecurrent())
+                dto.put("donationNumber", donation.getDonationNumber())
             }
         } else {
             dto.put("hasPermission", false)
@@ -170,6 +172,8 @@ class TrackNGOController {
                 Organization org = event.getOrganizationEvent().getOrganization()
                 dto.put("event", event.toViewDTO())
                 dto.put("organization", org.toDTO())
+                dto.put("eventNumber", event.getEventNumber())
+                dto.put("orgId", org.getId())
             }
         } else {
             dto.put("hasPermission", false)
@@ -203,11 +207,13 @@ class TrackNGOController {
                     OrganizationPerson orgPerson = organizationPersonRepository.findByPerson(person)
                     Organization org = orgPerson.getOrganization()
                     dto.put("organization", org.toDTO())
+                    dto.put("orgId", org.getId())
                 } else if (dto.get("friend") != null){
                     Friend person = friendRepository.findById(dto.get("friend") as Long).orElse(null)
                     OrganizationPerson orgPerson = organizationPersonRepository.findByPerson(person)
                     Organization org = orgPerson.getOrganization()
                     dto.put("organization", org.toDTO())
+                    dto.put("orgId", org.getId())
                 }
             }
         } else {
@@ -228,7 +234,9 @@ class TrackNGOController {
                 Person txnPerson = txn.getTxnPerson()
                 dto.put("transaction", txn.toViewDTO())
                 dto.put("organization", org.toDTO())
+                dto.put("orgId", org.getId())
                 dto.put("transactionPerson", txnPerson.toDTO())
+                dto.put("transactionNumber", txn.getTransactionNumber())
             }
         } else {
             dto.put("hasPermission", false)
@@ -371,7 +379,7 @@ class TrackNGOController {
             return new ResponseEntity<>(MakeMap("errorMsg", "Nombre buscado inválido"), HttpStatus.BAD_REQUEST)
         }
         if(friendRepository.findByFullName(friendName) != null){
-            return new ResponseEntity<>(MakeMap("errorMsg", "Nombre de Amigo ya existente"), HttpStatus.FORBIDDEN)
+            return new ResponseEntity<>(MakeMap("errorMsg", "Nombre de Amigo ya existente"), HttpStatus.CONFLICT)
         }
         if(orgId == null || organizationRepository.findById(orgId) == null){
             return new ResponseEntity<>(MakeMap("errorMsg", "No existe la organización"), HttpStatus.FORBIDDEN)
@@ -435,10 +443,10 @@ class TrackNGOController {
             transactionRepository.save(transaction)
             organizationTransactionRepository.save(new OrganizationTransaction(org, transaction))
             response.put("txnId", transaction.getId())
-            PersonTransaction personTxn = new PersonTransaction(donor, transaction)
-            personTransactionRepository.save(personTxn)
+            PersonTransaction personTransaction = new PersonTransaction(donor, transaction)
+            personTransactionRepository.save(personTransaction)
             Set<PersonTransaction> personTxnSet = new HashSet<PersonTransaction>()
-            personTxnSet.add(personTxn)
+            personTxnSet.add(personTransaction)
             transaction.setPersonTransaction(personTxnSet)
             transactionRepository.save(transaction)
             BigDecimal orgBalance = org.getBalance()

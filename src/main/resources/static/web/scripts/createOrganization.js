@@ -12,7 +12,16 @@ var createOrgForm = new Vue({
     methods: {
         create() {
             const inputName = $("#organizationName").val();
-            if(createOrgForm.orgNamesList.includes(inputName.toLowerCase())){
+            const adminUsername = $("#adminUser").val();
+            const adminPassword = $("#adminPassword").val();
+            if(inputName == null || inputName === "" || adminUsername == null || adminUsername === "" || adminPassword === "" || adminPassword == null){
+                swal.fire({
+                    icon: 'error',
+                    title: 'Campos Incompletos',
+                    text: "Todos los campos del formulario son obligatorios.",
+                    showConfirmButton: true
+                })
+            } else if(createOrgForm.orgNamesList.includes(inputName.toLowerCase())){
                 createOrgForm.nameTaken = true;
                 swal.fire({
                     icon: 'error',
@@ -23,12 +32,10 @@ var createOrgForm = new Vue({
             } else {
                 const request = {
                     orgName: inputName,
-                    adminUser: {
-                        username: $("#adminUser").val(),
-                        password: $("#adminPassword").val()
-                    }
+                    adminUserName: adminUsername,
+                    adminPassword: adminPassword
                 }
-                $.post("/api/organization/create", request)
+                $.post("/api/organizations/create", request)
                     .then(function (data) {
                         swal.fire({
                             icon: 'success',
@@ -39,17 +46,21 @@ var createOrgForm = new Vue({
                         });
                         createOrgForm.redirectOrgId = data.orgId;
                     })
-                    .then(function(){
-                        $.post("/api/login", {username: $("#adminUser").val(), password:$("#adminPassword").val()})
+                    .then(function () {
+                        const loginRequest = {
+                            username: $("#adminUser").val(),
+                            password: $("#adminPassword").val()
+                        }
+                        $.post("/api/login", loginRequest)
+                        .done(function () {
+                            window.location.href = '/web/mainPage.html?id=' + createOrgForm.redirectOrgId;
+                        })
                     })
-                    .done(function(){
-                        window.location.href = '/web/mainPage.html?orgId=' + createOrgForm.redirectOrgId;
-                    })
-                    .fail(function (data) {
+                    .fail(function() {
                         swal.fire({
                             icon: 'error',
                             title: "No se pudo realizar",
-                            text: "Ocurrió un error creando la organización. \n" + data.message,
+                            text: "Ocurrió un error creando la organización.",
                             showConfirmButton: true,
                             confirmButtonColor: '#3085d6',
                             confirmButtonText: 'OK'
@@ -69,6 +80,6 @@ var createOrgForm = new Vue({
 function getOrgNamesList(){
     $.get("/api/organizations/names")
         .done(function(data){
-            createOrgForm.orgNamesList = data.orgNamesList
+            createOrgForm.orgNamesList = data.takenOrgNames;
         })
 }

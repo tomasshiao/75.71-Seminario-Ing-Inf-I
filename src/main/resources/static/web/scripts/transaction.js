@@ -8,7 +8,8 @@ var transactionRecord = new Vue({
         organization: {},
         transactionPerson: {},
         recordExists: false,
-        hasPermission: false
+        hasPermission: false,
+        sameOrg: false
     },
     methods: {
         back() {
@@ -28,5 +29,7 @@ function getTransaction(){
             transactionRecord.transactionPerson = data.transactionPerson;
             transactionRecord.recordExists = data.recordExists;
             transactionRecord.hasPermission = data.hasPermission;
+            transactionRecord.sameOrg = (data.orgId.toString() === urlParams.get('orgId').toString());
+            document.title = "Transacción " + data.transactionNumber;
         })
 }

@@ -61,22 +61,33 @@ const signUp = new Vue({
         },
         validateName(){
             const nameToValidate = $("#collaboratorNameValidation").val();
-            $("#collaboratorNameSignUp").val = nameToValidate;
-            $.get("/api/findNewCollaborator/" + nameToValidate)
-                .done(function(data){
-                    if(data.errorMsg != null){
-                        signUp.back()
-                    } else {
-                        signUp.validated = true;
-                        signUp.userRegisteredInOrg = data.userRegisteredInOrg;
-                        if (data.userRegisteredInOrg) {
-                            signUp.enteredName = nameToValidate;
+            if(nameToValidate === "" || nameToValidate == null){
+                swal.fire({
+                    icon: 'error',
+                    title: "No se pudo realizar",
+                    text: "El campo Nombre debe estar completo",
+                    showConfirmButton: true,
+                    confirmButtonColor: '#e30c0c',
+                    confirmButtonText: 'OK'
+                });
+            } else {
+                $("#collaboratorNameSignUp").val = nameToValidate;
+                $.get("/api/findNewCollaborator/" + nameToValidate)
+                    .done(function (data) {
+                        if (data.errorMsg != null) {
+                            signUp.back()
+                        } else {
+                            signUp.validated = true;
+                            signUp.userRegisteredInOrg = data.userRegisteredInOrg;
+                            if (data.userRegisteredInOrg) {
+                                signUp.enteredName = nameToValidate;
+                            }
+                            signUp.orgId = data.orgId;
+                            signUp.collaboratorId = data.collaboratorId;
+                            signUp.passwordConfirmed = data.passwordConfirmed;
                         }
-                        signUp.orgId = data.orgId;
-                        signUp.collaboratorId = data.collaboratorId;
-                        signUp.passwordConfirmed = data.passwordConfirmed;
-                    }
-            })
+                    });
+            }
         }
     },
     created: function(){}

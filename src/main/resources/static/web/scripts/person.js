@@ -7,7 +7,8 @@ var personRecord = new Vue({
         person: {},
         organization: {},
         recordExists: false,
-        hasPermission: false
+        hasPermission: false,
+        sameOrg: false
     },
     methods: {
         createDonation(){
@@ -29,5 +30,6 @@ function getPerson(){
             personRecord.organization = data.organization;
             personRecord.recordExists = data.recordExists;
             personRecord.hasPermission = data.hasPermission;
+            personRecord.sameOrg = (data.orgId.toString() === urlParams.get('orgId').toString());
         })
 }

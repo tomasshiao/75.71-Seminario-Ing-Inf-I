@@ -5,18 +5,18 @@ var createEventForm = new Vue({
     el: "#createEventForm",
     data: {
         event: {},
-        hours: [],
-        mins: [],
         eventOptions: []
     },
     methods: {
         create() {
+            let hora = $("#hora").val();
+            console.log(hora);
             let request = {
                 eventName: $("#eventName").val(),
                 address: $("#address").val(),
                 eventType: $("#eventType").val(),
-                eventTimeHour: $("#eventTimeHour").val(),
-                eventTimeMin: $("#eventTimeMin").val(),
+                eventTimeHour: hora.substring(0, 2),
+                eventTimeMin: hora.substring(3,5),
                 eventDate: $("#eventDate").val()
             };
             $.post("/api/events/"+urlParams.get('orgId')+"/create", request)
@@ -31,11 +31,11 @@ var createEventForm = new Vue({
                     let eventId = data.eventId;
                     window.location.href = '/web/event.html?id=' + eventId + '&orgId=' + urlParams.get('orgId');
                 })
-                .fail(function (data) {
+                .fail(function () {
                     swal.fire({
                         icon: 'error',
                         title: "No se pudo realizar",
-                        text: "Ocurrió un error creando la transacción.\n" + data.errorMsg,
+                        text: "Ocurrió un error creando la transacción.",
                         showConfirmButton: true,
                         confirmButtonColor: '#3085d6',
                         confirmButtonText: 'OK'
@@ -52,16 +52,6 @@ var createEventForm = new Vue({
 getEventData();
 
 function getEventData(){
-    let hours = [];
-    let mins = [];
-    for(let i = 0; i < 60; i++){
-        mins.push({label: i, value: i});
-        if(i < 24){
-            hours.push({label: i, value: i})
-        }
-    }
-    createEventForm.hours = hours;
-    createEventForm.mins = mins;
     createEventForm.eventOptions = [
         {
             label: "CHARITY",

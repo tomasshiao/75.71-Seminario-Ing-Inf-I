@@ -4,33 +4,44 @@
       <meta charset="UTF-8">
       <title>Create Event</title>
     <link rel="stylesheet" href="styles/bootstrap.min.css">
-    <link rel="stylesheet" href="styles/createEvent.css">
+    <link rel="stylesheet" href="styles/forms.css">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   </head>
   <body>
     <div id="createEventForm">
-      <form class="form-inline row" id="create-org-form" onsubmit="return false">
-        <label for="eventName" class="col col-1" >Nombre: </label><input class="form-control col col-3" id="eventName" name="eventName" type="text" placeholder="Nombre del Evento"  required>
-        <label for="eventType" class="col col-1">Tipo de Evento: </label>
-        <select class="form-control col col-3" id="eventType" name="eventType" required>
-          <option v-for="option in eventOptions" :value="option.value">{{option.label}}</option>
-        </select>
-        <br>
-        <label for="address" class="col col-1" >Address: </label><input class="form-control col col-3" id="address" name="address" type="text" placeholder="Address"  required>
-        <label for="eventDate" class="col col-1" >Fecha: </label><input class="form-control col col-3" id="eventDate" name="eventDate" type="date" required>
-        <div class="row">
-          <p>Horario:</p>
-          <select class="form-control col col-3" id="eventTimeHour" name="eventTimeHour" required>
-            <option v-for="option in hours" :value="option.value">{{option.label}}</option>
-          </select>
-          <p>:</p>
-          <select class="form-control col col-3" id="eventTimeMin" name="eventTimeMin" required>
-            <option v-for="option in mins" :value="option.value">{{option.label}}</option>
+      <h1 class="titulo">Crear Evento</h1>
+      <form class="form-inline formulario" id="create-org-form" onsubmit="return false" @keyup.enter="create()">
+        <div class="form-group">
+          <label for="eventName">Nombre del Evento </label>
+          <input class="form-control" id="eventName" name="eventName" type="text" placeholder="Nombre del Evento"  required>
+        </div>
+        <p class="espacio"></p>
+        <div class="form-group">
+          <label for="eventType">Tipo de Evento </label>
+          <select class="form-control" id="eventType" name="eventType" required>
+            <option v-for="option in eventOptions" :value="option.value">{{option.label}}</option>
           </select>
         </div>
-        <br><br>
-        <input type="button" class="form-control btn btn-info col col-1" @click="create()" value="Create">
-        <input type="button" class="form-control btn btn-danger col col-1" @click="back()" value="Back">
+        <p class="espacio"></p>
+        <div class="form-group">
+          <label for="address">Address </label>
+          <input class="form-control" id="address" name="address" type="text" placeholder="Address"  required>
+        </div>
+        <p class="espacio"></p>
+        <div class="form-group">
+          <label for="eventDate">Fecha </label>
+          <input class="form-control" id="eventDate" name="eventDate" type="date" required>
+        </div>
+        <p class="espacio"></p>
+        <div class="form-group">
+          <label for="hora">Hora</label>
+          <input class="form-control" id="hora" name="hora" type="time" required>
+        </div>
+        <p class="espacio"></p>
+        <div class="form-group">
+          <input type="button" class="btn btn-info boton" @click="create()" value="Create">
+          <input type="button" class="btn btn-danger boton" @click="back()" value="Back">
+        </div>
       </form>
     </div>
     <script src="scripts/popper.min.js"></script>

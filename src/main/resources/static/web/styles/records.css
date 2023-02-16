@@ -1,0 +1,16 @@
+.tituloTabla{
+    text-align: center;
+}
+
+.registro, .botones{
+    border-radius: 10% 10% 10% 10%;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 1rem;
+    position: center;
+    width: 80%;
+}
+
+.boton{
+    margin: 0.5rem;
+}

@@ -4,26 +4,36 @@
         <meta charset="UTF-8">
         <title>Create Donation</title>
         <link rel="stylesheet" href="styles/bootstrap.min.css">
-        <link rel="stylesheet" href="styles/createDonation.css">
+        <link rel="stylesheet" href="styles/forms.css">
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     </head>
     <body>
         <div id="createDonationForm">
-            <form class="form-inline row" id="create-donation-form" onsubmit="return false">
-                <label for="donationType" class="col col-1">Tipo de Donación: </label>
-                <select class="form-control col col-3" id="donationType" name="donationType" @change="updateType($event)" required>
-                    <option v-for="option in donationOptions" :value="option.value">{{option.label}}</option>
-                </select>
-                <br>
-                <label for="amount" class="col col-1" v-if="type === 'Monetary'">Amount: </label><input class="form-control col col-3" id="amount" name="amount" type="number" placeholder="Amount"  v-show="type === 'Monetary'" required>
-                <br>
-                <label for="recurrency" class="col col-1" v-if="type === 'Monetary'">Recurrency Period: </label>
-                <select class="form-control col col-3" id="recurrency" name="recurrency" v-if="type === 'Monetary'" required>
+            <h1 class="titulo">Crear Donación </h1>
+            <form class="form-inline formulario" id="create-donation-form" onsubmit="return false" @keyup.enter="create()">
+                <div class="form-group">
+                    <label for="donationType">Tipo de Donación </label>
+                    <select class="form-control" id="donationType" name="donationType" @change="updateType($event)" required>
+                        <option v-for="option in donationOptions" :value="option.value">{{option.label}}</option>
+                    </select>
+                </div>
+                <p class="espacio"></p>
+                <div class="form-group">
+                    <label for="amount" v-if="type === 'Monetary'">Monto </label>
+                    <input class="form-control" id="amount" name="amount" type="number" placeholder="Amount"  v-show="type === 'Monetary'" required>
+                </div>
+                <p class="espacio"></p>
+                <div class="form-group">
+                <label for="recurrency" v-if="type === 'Monetary'">Periodo de Recurrencia </label>
+                <select class="form-control" id="recurrency" name="recurrency" v-if="type === 'Monetary'" required>
                     <option v-for="option in recurrencyOptions" :value="option.value">{{option.label}}</option>
                 </select>
-                <br><br>
-                <input type="button" class="form-control btn btn-info col col-1" @click="create()" value="Create">
-                <input type="button" class="form-control btn btn-danger col col-1" @click="back()" value="Back">
+                </div>
+                <p class="espacio"></p>
+                <div class="form-group">
+                    <input type="button" class="btn btn-info boton" @click="create()" value="Crear">
+                    <input type="button" class="btn btn-danger boton" @click="back()" value="Atrás">
+                </div>
             </form>
         </div>
         <script src="scripts/popper.min.js"></script>

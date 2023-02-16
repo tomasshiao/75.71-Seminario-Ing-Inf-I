@@ -7,7 +7,8 @@ var eventRecord = new Vue({
         event: {},
         organization: {},
         recordExists: false,
-        hasPermission: false
+        hasPermission: false,
+        sameOrg: false
     },
     methods: {
         back() {
@@ -26,5 +27,7 @@ function getEvent(){
             eventRecord.organization = data.organization;
             eventRecord.recordExists = data.recordExists;
             eventRecord.hasPermission = data.hasPermission;
+            eventRecord.sameOrg = (data.orgId.toString() === urlParams.get('orgId').toString());
+            document.title = "Evento " + data.eventNumber;
         })
 }

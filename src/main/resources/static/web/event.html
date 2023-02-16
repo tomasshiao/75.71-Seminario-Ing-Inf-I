@@ -4,18 +4,35 @@
         <meta charset="UTF-8">
         <title>Event</title>
         <link rel="stylesheet" href="styles/bootstrap.min.css">
-        <link rel="stylesheet" href="styles/event.css">
+        <link rel="stylesheet" href="styles/records.css">
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     </head>
     <body>
         <div id="eventRecord">
-            <section id="record" v-for="field in event.fields">
-                <div v-bind:id="field.fieldName" class="row">
-                    <div class="col-6"><h3>{{field.fieldName}}</h3></div>
-                    <div class="col-6"><h3>{{field.fieldValue}}</h3></div>
+            <div v-if="hasPermission === false">
+                <h3>No tiene permiso para ver este registro.</h3>
+            </div>
+            <div v-if="hasPermission === true && (recordExists === false || sameOrg === false)">
+                <h3>El registro no existe en la organización.</h3>
+            </div>
+            <div v-if="hasPermission === true && recordExists === true && sameOrg === true">
+                <div>
+                    <table class="table registro">
+                        <thead>
+                        <tr v-for="field in event.fields" class="table-warning" ><th v-if="field.fieldName === 'Event Name'" colspan="2" class="tituloTabla">{{field.fieldValue}}</th></tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="field in event.fields">
+                            <th v-if="field.fieldName !== 'Event Name'">{{field.fieldName}}</th>
+                            <td v-if="field.fieldName !== 'Event Name'">{{field.fieldValue}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
-            </section>
-            <input type="button" class="form-control btn btn-danger col col-1" @click="back()" value="Back">
+                <div class="botones">
+                    <input type="button" class="btn btn-danger boton" @click="back()" value="Atrás">
+                </div>
+            </div>
         </div>
         <script src="scripts/popper.min.js"></script>
         <script src="scripts/jquery-3.5.1.min.js"></script>

@@ -4,23 +4,32 @@
         <meta charset="UTF-8">
         <title>Create Organization</title>
         <link rel="stylesheet" href="styles/bootstrap.min.css">
-        <link rel="stylesheet" href="styles/createOrganization.css">
+        <link rel="stylesheet" href="styles/forms.css">
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     </head>
     <body>
         <div id="createOrgForm">
-            <form class="form-inline row" id="create-org-form" onsubmit="return false">
-                <label for="organizationName" class="col col-1">Nombre de la Organización: </label><input class="form-control col col-3" id="organizationName" name="organizationName" type="text" placeholder="OrganizationName"  required>
-                <br>
-                <p v-show="nameTaken === true" style="color: red;">El nombre ingresado ya está registrado como una organización.</p>
-                <br>
-                <h2>Admin User</h2>
-                <label for="adminUser" class="col col-1">Username: </label><input class="form-control col col-3" id="adminUser" name="adminUser" type="text" placeholder="Admin Username"  required>
-                <br>
-                <label for="adminPassword" class="col col-1" >Password: </label><input class="form-control col col-3" id="adminPassword" name="adminPassword" type="password" placeholder="Admin Password"  required>
-                <br><br>
-                <input type="button" class="form-control btn btn-info col col-1" @click="create()" value="Create">
-                <input type="button" class="form-control btn btn-danger col col-1" @click="back()" value="Back">
+            <h1 class="titulo">Crear Organización</h1>
+            <form class="form-inline formulario" id="create-org-form" onsubmit="return false" @keyup.enter="create()">
+                <div class="form-group">
+                    <label for="organizationName">Nombre de la Organización </label>
+                    <input class="form-control col col-3" id="organizationName" name="organizationName" type="text" placeholder="Nombre de la organización"  required>
+                    <p v-show="nameTaken === true" class="error">El nombre ingresado ya está registrado como una organización.</p>
+                </div>
+                <p class="espacio"></p>
+                <div class="form-group">
+                    <h2>Usuario Administrador</h2>
+                    <label for="adminUser">Nombre del usuario administrador </label>
+                    <input class="form-control" id="adminUser" name="adminUser" type="text" placeholder="Nombre del usuario administrador"  required>
+                    <p class="espacio"></p>
+                    <label for="adminPassword">Contraseña del usuario administrador </label>
+                    <input class="form-control" id="adminPassword" name="adminPassword" type="password" placeholder="Contraseña"  required>
+                </div>
+                <p class="espacio"></p>
+                <div class="form-group">
+                    <input type="button" class="btn btn-success boton" @click="create()" value="Crear">
+                    <input type="button" class="btn btn-danger boton" @click="back()" value="Atrás">
+                </div>
             </form>
         </div>
         <script src="scripts/popper.min.js"></script>

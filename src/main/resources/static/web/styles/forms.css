@@ -1,0 +1,20 @@
+.formulario{
+    margin: 0.3rem 2rem 2rem 2rem;
+}
+
+.boton{
+    margin: 0.5rem;
+}
+
+.titulo{
+    margin-left: 1rem;
+    margin-top: 1rem;
+}
+
+.espacio{
+    margin: 1rem;
+}
+
+.error{
+    color: red;
+}

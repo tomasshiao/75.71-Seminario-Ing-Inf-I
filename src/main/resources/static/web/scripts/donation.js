@@ -10,6 +10,7 @@ var donationRecord = new Vue({
         donor: {},
         recordExists: false,
         hasPermission: false,
+        sameOrg: false,
         isRecurrent: false
     },
     methods: {
@@ -38,5 +39,7 @@ function getDonation(){
             donationRecord.recordExists = data.recordExists;
             donationRecord.hasPermission = data.hasPermission;
             donationRecord.isRecurrent = data.isRecurrent;
+            donationRecord.sameOrg = (data.orgId.toString() === urlParams.get('orgId').toString());
+            document.title = "Donación " + data.donationNumber;
         })
 }

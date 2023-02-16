@@ -4,7 +4,7 @@
       <meta charset="UTF-8">
       <title>Sign Up</title>
       <link rel="stylesheet" href="styles/bootstrap.min.css">
-      <link rel="stylesheet" href="styles/signUp.css">
+      <link rel="stylesheet" href="styles/forms.css">
       <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   </head>
   <body>
@@ -12,33 +12,36 @@
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <h1 class="navbar-brand">trackNGO</h1>
       </nav>
-      <!--div v-show="user == 'Guest'"-->
       <div class="row">
         <div id="formularioValidate" class="col col-8" v-if="validated === false">
-          <form class="form-inline row" id="validate-form" onsubmit="return false">
-            <label for="collaboratorNameValidation" class="col col-1">Name: </label><input class="form-control col col-3" id="collaboratorNameValidation" type="email" name="collaboratorName" placeholder="Name" @keyup.enter="validateName()" required>
-            <br><br>
-            <input type="button" class="form-control btn btn-info col col-1" @click="validateName()" value="Validate">
+          <form class="form-inline formulario" id="validate-form" onsubmit="return false" @keyup.enter="validateName()">
+            <label for="collaboratorNameValidation">Nombre </label>
+            <input class="form-control" id="collaboratorNameValidation" type="email" name="collaboratorName" placeholder="Nombre" @keyup.enter="validateName()" required>
+            <p class="espacio"></p>
+            <input type="button" class="btn btn-info boton" @click="validateName()" value="Validate">
           </form>
         </div>
         <div id="formularioSignUp" class="col col-8" v-if="validated === true && userRegisteredInOrg === true && passwordConfirmed === false">
-          <form class="form-inline row" id="signUp-form" onsubmit="return false">
-            <label for="collaboratorNameSignUp" class="col col-1">Name: </label><input class="form-control col col-3" id="collaboratorNameSignUp" type="email" name="collaboratorName" :value="enteredName" readonly>
-            <p>Please set your password:</p>
-            <label for="password" class="col col-1">Password: </label><input class="form-control col col-3" id="password" type="password" name="password" placeholder="Your Password" @keyup.enter="signUp()" required>
-            <br><br>
-            <input type="button" class="form-control btn btn-info col col-1" @click="signUp()" value="Sign Up">
-            <input type="button" class="form-control btn btn-info col col-1" @click="back()" value="Back">
+          <form class="form-inline formulario" id="signUp-form" onsubmit="return false" @keyup.enter="signUp()">
+            <label for="collaboratorNameSignUp">Nombre </label>
+            <input class="form-control form-control-plaintext" id="collaboratorNameSignUp" type="email" name="collaboratorName" :value="enteredName" readonly>
+            <p class="espacio"></p>
+            <p>Elija una contraseña</p>
+            <label for="password" class="col col-1">Contraseña </label>
+            <input class="form-control" id="password" type="password" name="password" placeholder="Contraseña" required>
+            <p class="espacio"></p>
+            <input type="button" class="btn btn-success boton" @click="signUp()" value="Crear">
+            <input type="button" class="btn btn-danger boton" @click="back()" value="Atrás">
           </form>
         </div>
-        <div id="errorMsg" class="col col-8" v-if="userRegisteredInOrg === false && validated === true && passwordConfirmed === false">
-          <p style="color:red;">No te registraron en ninguna organización.</p>
-          <input type="button" class="form-control btn btn-info col col-1" @click="back()" value="Back">
+        <div id="errorMsg" class="col col-8" v-if="userRegisteredInOrg === false && validated === true && passwordConfirmed === false" @keyup.enter="back()">
+          <p class="error">No te registraron en ninguna organización.</p>
+          <input type="button" class="btn btn-danger boton" @click="back()" value="Atrás">
         </div>
-        <div id="alreadySignedUp" class="col col-8" v-if="userRegisteredInOrg === true && validated === true && passwordConfirmed === true">
-          <p style="color:red;">Ya estás registrado en la organización.</p>
+        <div id="alreadySignedUp" class="col col-8" v-if="userRegisteredInOrg === true && validated === true && passwordConfirmed === true" @keyup.enter="back()">
+          <p class="error">Ya estás registrado en la organización.</p>
           <p>Accedé desde <a href="/web/login.html">acá</a></p>
-          <input type="button" class="form-control btn btn-info col col-1" @click="back()" value="Back">
+          <input type="button" class="btn btn-danger boton" @click="back()" value="Atrás">
         </div>
       </div>
     </div>

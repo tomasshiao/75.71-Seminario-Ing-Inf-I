@@ -44,30 +44,36 @@ var mainPage = new Vue({
                 inputLabel: 'Ingrese el usuario en formato de email',
                 inputPlaceholder: 'Ingrese el usuario en formato de email',
                 validationMessage: "Nombre de usuario inválido, debe ser de formato email.",
+                showConfirmButton: true,
+                confirmButtonText: "Crear",
+                showCancelButton: true,
+                cancelButtonText: "Cancelar",
                 preConfirm: (email) => {
                     if (mainPage.takenUsernames.includes(email)) {
                         Swal.showValidationMessage("El nombre de usuario ya existe.")
                     }
                 }
             })
-            const request = {
-                collaboratorName: email,
-                password: null,
-                passwordConfirmed: false
+            if(!(email == null || email === "" || email === undefined)){
+                const request = {
+                    collaboratorName: email,
+                    password: null,
+                    passwordConfirmed: false
+                }
+                $.post("/api/collaborators/" + urlParams.get('id') + "/create", request)
+                    .done(function (data) {
+                        mainPage.takenUsernames.push(request.collaboratorName);
+                        swal.fire({
+                            icon: 'success',
+                            title: `Usuario ${data.collaborator.fullName} creado`,
+                            showConfirmButton: true,
+                            html:
+                                'El nuevo usuario puede ingresar en ' +
+                                '<a href="/web/signUp.html">esta página</a> ' +
+                                'para setear su contraseña',
+                        });
+                    })
             }
-            $.post("/api/collaborators/"+urlParams.get('id')+"/create", request)
-                .done(function (data){
-                    mainPage.takenUsernames.push(request.collaboratorName);
-                    swal.fire({
-                        icon:'success',
-                        title: `Usuario ${data.collaborator.fullName} creado`,
-                        showConfirmButton: true,
-                        html:
-                            'El nuevo usuario puede ingresar en ' +
-                            '<a href="/web/signUp.html">esta página</a> ' +
-                            'para setear su contraseña',
-                    });
-            })
         },
         createEvent(){
             window.location.href = '/web/createEvent.html?orgId='+urlParams.get("id");
@@ -81,28 +87,31 @@ var mainPage = new Vue({
                 showCancelButton: true,
                 validationMessage: "Nombre inválido, debe ser de formato email."
             })
-            const request = {
-                friendName: email
+            if(!(email == null || email === "" || email === undefined)) {
+                const request = {
+                    friendName: email
+                }
+                $.post("/api/friends/" + urlParams.get('id') + "/create", request)
+                    .done(function (data) {
+                        swal.fire({
+                            icon: 'success',
+                            title: `Amigo ${data.friend.fullName} creado`,
+                            showConfirmButton: true
+                        });
+                        window.location.href = '/web/person.html?type=friend&orgId=' + urlParams.get('id') + "&id=" + data.friend.id;
+                    })
+                    .fail(function (data) {
+                        console.log(data);
+                        swal.fire({
+                            icon: 'error',
+                            title: "No se pudo realizar",
+                            text: data.responseJSON.errorMsg,
+                            showConfirmButton: true,
+                            confirmButtonColor: '#e30c0c',
+                            confirmButtonText: 'OK'
+                        });
+                    })
             }
-            $.post("/api/friends/"+urlParams.get('id')+"/create", request)
-                .done(function (data){
-                    swal.fire({
-                        icon:'success',
-                        title: `Amigo ${data.friend.fullName} creado`,
-                        showConfirmButton: true
-                    });
-                    window.location.href = '/web/person.html?type=friend&orgId='+urlParams.get('id')+"&id="+data.friend.id;
-                })
-                .fail(function (data){
-                    swal.fire({
-                        icon: 'error',
-                        title: "No se pudo realizar",
-                        text: data.errorMsg,
-                        showConfirmButton: true,
-                        confirmButtonColor: '#e30c0c',
-                        confirmButtonText: 'OK'
-                    });
-                })
         },
         createOrgTxn(){
             window.location.href = '/web/createTxn.html?orgId='+urlParams.get("id");
@@ -132,6 +141,7 @@ function getOrgData(){
             mainPage.events = data.events;
             mainPage.donations = data.donations;
             mainPage.transactions = data.transactions;
+            document.title = data.organization.name;
             console.info("Organization data", data)
         })
 }

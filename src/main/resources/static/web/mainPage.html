@@ -16,11 +16,11 @@
                         Organización: {{organization.name}}
                     </span>
                     <span class="navbar-text navText">
-                        Collaborator: <a @click="redirectToRecord('collaborator', collaborator.id)">{{collaborator.fullName}}</a>
+                        Colaborador/a: <a @click="redirectToRecord('collaborator', collaborator.id)"><span class="clickable">{{collaborator.fullName}}</span></a>
                     </span>
                 </span>
                 <form class="form-inline my-2 my-lg-0 ms-auto logout">
-                    <button class="btn btn-outline-danger my-2 my-sm-0" @click="logout()">Log out</button>
+                    <button class="btn btn-outline-danger my-2 my-sm-0" @click="logout()">Cerrar Sesión</button>
                 </form>
             </nav>
 
@@ -29,13 +29,13 @@
                     <div class="row">
                         <section id="eventsRecords">
                         <h2>Eventos</h2>
-                            <table id="events" class="table table-striped">
+                            <table id="events" class="table table-striped tablas">
                                 <thead>
-                                    <tr class="table-primary"><th>Event Name</th><th>Date</th><th>Time</th><th>Address</th></tr>
+                                    <tr class="table-primary"><th>Nombre</th><th>Fecha</th><th>Hora</th><th>Lugar</th></tr>
                                 </thead>
                                 <tbody>
                                     <tr v-for="evento in events" v-bind:id="'evento' + evento.id">
-                                        <td @click="redirectToRecord('event', evento.id)">{{evento.eventName}}</td>
+                                        <td @click="redirectToRecord('event', evento.id)"><span class="clickable">{{evento.eventName}}</span></td>
                                         <td>{{evento.eventDate}}</td>
                                         <td>{{evento.eventTime}}</td>
                                         <td>{{evento.address}}</td>
@@ -45,23 +45,23 @@
                         </section>
                         <section id="friendsRecords">
                             <h2>Amigos</h2>
-                            <table id="friendRecord" class="table table-striped">
+                            <table id="friendRecord" class="table table-striped tablas">
                                 <thead>
                                     <tr class="table-primary"><th>Nombre</th></tr>
                                 </thead>
                                 <tr v-for="friend in friends" v-bind:id="'amigo' + friend.id">
-                                    <td @click="redirectToRecord('friend', friend.id)">{{friend.fullName}}</td>
+                                    <td @click="redirectToRecord('friend', friend.id)"><span class="clickable">{{friend.fullName}}</span></td>
                                 </tr>
                             </table>
                         </section>
                         <section id="donationsRecords">
                             <h2>Donaciones</h2>
-                            <table id="donationRecord" class="table table-striped">
+                            <table id="donationRecord" class="table table-striped tablas">
                                 <thead>
-                                    <tr class="table-primary"><th>Donation Number</th><th>Type</th><th>Status</th></tr>
+                                    <tr class="table-primary"><th>Número de la Donación</th><th>Tipo</th><th>Estado</th></tr>
                                 </thead>
                                 <tr v-for="donation in donations" v-bind:id="'donacion'+donation.id">
-                                    <td class="col-4" @click="redirectToRecord('donation', donation.id)">{{donation.donationNumber}}</td>
+                                    <td class="col-4" @click="redirectToRecord('donation', donation.id)"><span class="clickable">{{donation.donationNumber}}</span></td>
                                     <td class="col-4">{{donation.donationType}}</td>
                                     <td class="col-4">{{donation.status}}</td>
                                 </tr>
@@ -69,12 +69,12 @@
                         </section>
                         <section id="transactionsRecords">
                             <h2>Transacciones</h2>
-                            <table id="transactionRecord" class="table table-striped">
+                            <table id="transactionRecord" class="table table-striped tablas">
                                 <thead>
-                                    <tr class="table-primary"><th>Transaction Number</th><th>Name</th><th>Type</th><th>Amount</th><th>Status</th></tr>
+                                    <tr class="table-primary"><th>Número de Transacción</th><th>Nombre</th><th>Tipo</th><th>Monto</th><th>Estado</th></tr>
                                 </thead>
                                 <tr v-for="transaction in transactions" v-bind:id="'transaccion' + transaction.txnId">
-                                    <td class="col-3" @click="redirectToRecord('transaction', transaction.txnId)">{{transaction.transactionNumber}}</td>
+                                    <td class="col-3" @click="redirectToRecord('transaction', transaction.txnId)"><span class="clickable">{{transaction.transactionNumber}}</span></td>
                                     <td class="col-3">{{transaction.Name}}</td>
                                     <td class="col-3">{{transaction.type}}</td>
                                     <td class="col-3">{{transaction.amount}}</td>
@@ -87,10 +87,10 @@
                 <section class="col-4">
                     <section id="operations">
                         <h2>Gestiones</h2>
-                        <button class="row btn btn-outline-info boton" @click="addCollaborator()">Add Collaborator</button> <br>
-                        <button class="row btn btn-outline-info boton" @click="createEvent()">Create Event</button> <br>
-                        <button class="row btn btn-outline-info boton" @click="addFriend()">Add Friend</button> <br>
-                        <button class="row btn btn-outline-info boton" @click="createOrgTxn()">Create Organization Transaction</button>
+                        <button class="row btn btn-outline-info boton" @click="addCollaborator()">Agregar Colaborador/a</button> <br>
+                        <button class="row btn btn-outline-info boton" @click="createEvent()">Crear Evento</button> <br>
+                        <button class="row btn btn-outline-info boton" @click="addFriend()">Agregar Amigo/a</button> <br>
+                        <button class="row btn btn-outline-info boton" @click="createOrgTxn()">Crear Transacción de la Organización</button>
                     </section>
                 </section>
             </div>
