@@ -154,6 +154,7 @@ class TrackNGOController {
                 dto.put("donor", donor?.toDTO())
                 dto.put("isRecurrent", donation.getIsRecurrent())
                 dto.put("donationNumber", donation.getDonationNumber())
+                dto.put("type", donation.getDonationType().toString())
             }
         } else {
             dto.put("hasPermission", false)
@@ -437,23 +438,9 @@ class TrackNGOController {
         organizationDonationRepository.save(new OrganizationDonation(org, donation))
         Map<String,Object> response = new LinkedHashMap<>()
         if((DonationType.MONETARY == (donationType.toUpperCase() as DonationType))){
-            Integer txnNumber = transactionRepository.findAll().toList().size()
-            Transaction transaction = new Transaction(amountBigDecimal, TransactionType.RECEIPT, txnNumber)
-            transaction.setOrganizationPerson(organizationPerson)
-            transactionRepository.save(transaction)
-            organizationTransactionRepository.save(new OrganizationTransaction(org, transaction))
-            response.put("txnId", transaction.getId())
-            PersonTransaction personTransaction = new PersonTransaction(donor, transaction)
-            personTransactionRepository.save(personTransaction)
-            Set<PersonTransaction> personTxnSet = new HashSet<PersonTransaction>()
-            personTxnSet.add(personTransaction)
-            transaction.setPersonTransaction(personTxnSet)
-            transactionRepository.save(transaction)
-            BigDecimal orgBalance = org.getBalance()
-            org.setBalance(amountBigDecimal + orgBalance)
-            organizationRepository.save(org)
-            transaction.updateStatus(TransactionStatus.ACCEPTED)
-            transactionRepository.save(transaction)
+            donation.setStatus(DonationStatus.PENDING)
+        } else {
+            donation.setStatus(DonationStatus.NOT_APPLICABLE)
         }
         Set<PersonDonation> personDonationSet = new HashSet<PersonDonation>()
         personDonationSet.add(personDonation)
@@ -462,6 +449,42 @@ class TrackNGOController {
         response.put("personDonationId", personDonation.getId())
         response.put("donationId", donation.getId())
         return new ResponseEntity<>(response, HttpStatus.CREATED)
+    }
+
+    @RequestMapping(path = "/donations/{id}/{orgId}/confirm")
+    ResponseEntity<Map<String, Object>> confirmMonetaryDonation(@PathVariable Long orgId, @PathVariable Long id, Authentication authentication){
+        validateIsGuest(authentication)
+        if(id == null || donationRepository.findById(id) == null){
+            return new ResponseEntity<>(MakeMap("errorMsg", "Donación Inexistente"), HttpStatus.BAD_GATEWAY)
+        }
+        if(orgId == null || organizationRepository.findById(orgId) == null){
+            return new ResponseEntity<>(MakeMap("errorMsg", "No existe la organización"), HttpStatus.BAD_GATEWAY)
+        }
+        Donation donation = donationRepository.findById(id).orElse(null)
+        if(donation.getDonationType() != DonationType.MONETARY){
+            return new ResponseEntity<>(MakeMap("errorMsg", "Operación no válida para este tipo de donación"), HttpStatus.FORBIDDEN)
+        }
+        donation.setStatus(DonationStatus.ACTIVE)
+        donationRepository.save(donation)
+        Person donor = donation.getPersonDonation().first().getPerson()
+        Integer txnNumber = transactionRepository.findAll().toList().size()
+        Transaction transaction = new Transaction(amountBigDecimal, TransactionType.RECEIPT, txnNumber)
+        transaction.setOrganizationPerson(organizationPerson)
+        transactionRepository.save(transaction)
+        organizationTransactionRepository.save(new OrganizationTransaction(org, transaction))
+        response.put("txnId", transaction.getId())
+        PersonTransaction personTransaction = new PersonTransaction(donor, transaction)
+        personTransactionRepository.save(personTransaction)
+        Set<PersonTransaction> personTxnSet = new HashSet<PersonTransaction>()
+        personTxnSet.add(personTransaction)
+        transaction.setPersonTransaction(personTxnSet)
+        transactionRepository.save(transaction)
+        BigDecimal orgBalance = org.getBalance()
+        org.setBalance(amountBigDecimal + orgBalance)
+        organizationRepository.save(org)
+        transaction.updateStatus(TransactionStatus.PROCESSING)
+        transactionRepository.save(transaction)
+        return new ResponseEntity<>(MakeMap("errorMsg", "Success"), HttpStatus.ACCEPTED)
     }
 
     @RequestMapping(path = "/donations/{id}/{orgId}/cancel", method = RequestMethod.POST)
@@ -544,12 +567,17 @@ class TrackNGOController {
         transactionRepository.save(transaction)
         if((txnType == TransactionType.PURCHASE) || (txnType == TransactionType.PAYMENT)) {
             if (organization.getBalance() < amountBigDecimal) {
-                Transaction transactionDebt = transactionRepository.save(new Transaction((amountBigDecimal - organization.getBalance()), TransactionType.DEBT, txnNumber))
-                transaction.updateStatus(TransactionStatus.ACCEPTED)
-                transactionRepository.save(transaction)
-                organizationTransactionRepository.save(new OrganizationTransaction(organization, transactionDebt))
-                organization.setBalance(0 as BigDecimal)
-                organizationRepository.save(organization)
+                if(txnType == TransactionType.PAYMENT) {
+                    Transaction transactionDebt = transactionRepository.save(new Transaction((amountBigDecimal - organization.getBalance()), TransactionType.DEBT, txnNumber))
+                    transaction.updateStatus(TransactionStatus.ACCEPTED)
+                    transactionRepository.save(transaction)
+                    organizationTransactionRepository.save(new OrganizationTransaction(organization, transactionDebt))
+                    organization.setBalance(0 as BigDecimal)
+                    organizationRepository.save(organization)
+                } else if(txnType == TransactionType.PURCHASE){
+                    transaction.updateStatus(TransactionStatus.DENIED)
+                    transactionRepository.save(transaction)
+                }
             } else {
                 organization.setBalance(amountBigDecimal - organization.getBalance())
                 organizationRepository.save(organization)

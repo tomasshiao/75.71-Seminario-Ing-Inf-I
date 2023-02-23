@@ -11,11 +11,18 @@ var donationRecord = new Vue({
         recordExists: false,
         hasPermission: false,
         sameOrg: false,
+        type: "",
         isRecurrent: false
     },
     methods: {
         cancelar(){
             $.post("/api/donations/"+urlParams.get('id')+"/"+urlParams.get('orgId')+"/cancel")
+                .done(function(){
+                    window.location.reload();
+                })
+        },
+        confirmarRecepcion(){
+            $.post("/api/donations/"+urlParams.get('id')+"/"+urlParams.get('orgId')+"/confirm")
                 .done(function(){
                     window.location.reload();
                 })
@@ -39,6 +46,7 @@ function getDonation(){
             donationRecord.recordExists = data.recordExists;
             donationRecord.hasPermission = data.hasPermission;
             donationRecord.isRecurrent = data.isRecurrent;
+            donationRecord.type = data.type;
             donationRecord.sameOrg = (data.orgId.toString() === urlParams.get('orgId').toString());
             document.title = "Donación " + data.donationNumber;
         })

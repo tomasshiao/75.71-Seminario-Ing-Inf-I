@@ -1,6 +1,7 @@
 package com.example.trackNGO.Model
 
 enum DonationStatus {
+    PENDING,
     NOT_APPLICABLE,
     ACTIVE,
     INACTIVE,

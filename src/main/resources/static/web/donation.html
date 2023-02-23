@@ -31,6 +31,7 @@
                 </div>
                 <div class="botones">
                     <input type="button" class="btn btn-success boton" v-if="isRecurrent === true && status !== 'INACTIVE'" @click="cancelar()" value="Cancelar Donación Recurrente">
+                    <input type="button" class="btn btn-success boton" v-if="type === 'MONETARY' && status === 'PENDING'" @click="confirmarRecepcion()" value="Confirmar Recepción">
                     <input type="button" class="btn btn-danger boton" @click="back()" value="Atrás">
                 </div>
             </div>
