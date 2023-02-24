@@ -155,6 +155,7 @@ class TrackNGOController {
                 dto.put("isRecurrent", donation.getIsRecurrent())
                 dto.put("donationNumber", donation.getDonationNumber())
                 dto.put("type", donation.getDonationType().toString())
+                dto.put("receiptGenerated", donation.getReceiptGenerated())
             }
         } else {
             dto.put("hasPermission", false)
@@ -257,7 +258,6 @@ class TrackNGOController {
             return new ResponseEntity<>(MakeMap("errorMsg", "Usuario inexistente"), HttpStatus.NOT_FOUND)
         }
         Map<String, Object> dto = new HashMap<>()
-        //OrganizationPerson op = organizationPersonRepository.findAll().stream().filter(op -> op.getPerson().getName() == username).collect(Collectors.toList()).first()
         OrganizationPerson op = organizationPersonRepository.findByPerson(collaborator)
         Organization org = op.getOrganization()
         dto.put("orgId", org.getId())
@@ -466,24 +466,6 @@ class TrackNGOController {
         }
         donation.setStatus(DonationStatus.ACTIVE)
         donationRepository.save(donation)
-        Person donor = donation.getPersonDonation().first().getPerson()
-        Integer txnNumber = transactionRepository.findAll().toList().size()
-        Transaction transaction = new Transaction(amountBigDecimal, TransactionType.RECEIPT, txnNumber)
-        transaction.setOrganizationPerson(organizationPerson)
-        transactionRepository.save(transaction)
-        organizationTransactionRepository.save(new OrganizationTransaction(org, transaction))
-        response.put("txnId", transaction.getId())
-        PersonTransaction personTransaction = new PersonTransaction(donor, transaction)
-        personTransactionRepository.save(personTransaction)
-        Set<PersonTransaction> personTxnSet = new HashSet<PersonTransaction>()
-        personTxnSet.add(personTransaction)
-        transaction.setPersonTransaction(personTxnSet)
-        transactionRepository.save(transaction)
-        BigDecimal orgBalance = org.getBalance()
-        org.setBalance(amountBigDecimal + orgBalance)
-        organizationRepository.save(org)
-        transaction.updateStatus(TransactionStatus.PROCESSING)
-        transactionRepository.save(transaction)
         return new ResponseEntity<>(MakeMap("errorMsg", "Success"), HttpStatus.ACCEPTED)
     }
 
@@ -550,11 +532,11 @@ class TrackNGOController {
             return new ResponseEntity<>(MakeMap("errorMsg", "No existe la organización"), HttpStatus.FORBIDDEN)
         }
         Organization organization = organizationRepository.findById(orgId).orElse(null)
-        Long orgAdminId = organization.getOrgAdmins().first().get('id') as Long
+        Long orgAdminId = organization.getOrgAdmins()[0].get('id') as Long
         Person orgAdmin = collaboratorRepository.findById(orgAdminId).orElse(null)
         OrganizationPerson organizationPerson = organizationPersonRepository.findByPerson(orgAdmin)
         TransactionType txnType = transactionType.toUpperCase() as TransactionType
-        Integer txnNumber = transactionRepository.findAll().toList().size()
+        Integer txnNumber = transactionRepository.findAll().toList().size() + 1
         Transaction transaction = new Transaction(amountBigDecimal, txnType, txnNumber)
         transaction.setOrganizationPerson(organizationPerson)
         transactionRepository.save(transaction)
@@ -593,6 +575,43 @@ class TrackNGOController {
         Map<String, Object> response = new HashMap<>()
         response.put("transactionId", transaction.getId())
         return new ResponseEntity<>(response, HttpStatus.CREATED)
+    }
+
+    @RequestMapping(path = "/transactions/debt/generate/{donationId}", method = RequestMethod.POST)
+    ResponseEntity<Map<String,Object>> generateDebtTransaction(@PathVariable Long donationId, Authentication authentication){
+        validateIsGuest(authentication)
+        if(donationId == null || donationRepository.findById(donationId) == null){
+            return new ResponseEntity<>(MakeMap("errorMsg", "Donación Inexistente"), HttpStatus.BAD_GATEWAY)
+        }
+        Donation donation = donationRepository.findById(donationId).orElse(null)
+        if(donation.getDonationType() != DonationType.MONETARY){
+            return new ResponseEntity<>(MakeMap("errorMsg", "Operación no válida para este tipo de donación"), HttpStatus.FORBIDDEN)
+        }
+        Person donor = donation.getOrganizationPerson().getPerson()
+        Integer txnNumber = transactionRepository.findAll().toList().size() + 1
+        BigDecimal amountBigDecimal = donation.getAmount()
+        OrganizationPerson organizationPerson = organizationPersonRepository.findByPerson(donor)
+        Organization org = organizationPerson.getOrganization()
+        Transaction transaction = new Transaction(amountBigDecimal, TransactionType.RECEIPT, txnNumber)
+        transaction.setOrganizationPerson(organizationPerson)
+        transactionRepository.save(transaction)
+        organizationTransactionRepository.save(new OrganizationTransaction(org, transaction))
+        PersonTransaction personTransaction = new PersonTransaction(donor, transaction)
+        personTransactionRepository.save(personTransaction)
+        Set<PersonTransaction> personTxnSet = new HashSet<PersonTransaction>()
+        personTxnSet.add(personTransaction)
+        transaction.setPersonTransaction(personTxnSet)
+        transactionRepository.save(transaction)
+        BigDecimal orgBalance = org.getBalance()
+        org.setBalance(amountBigDecimal + orgBalance)
+        organizationRepository.save(org)
+        transaction.updateStatus(TransactionStatus.ACCEPTED)
+        transactionRepository.save(transaction)
+        donation.setReceiptGenerated()
+        donationRepository.save(donation)
+        Map<String,Object> response = new LinkedHashMap<>()
+        response.put("receiptTransactionId", transaction.getId())
+        return new ResponseEntity<>(response, HttpStatus.ACCEPTED)
     }
 
     @RequestMapping(path = "/organizations/create", method = RequestMethod.POST)

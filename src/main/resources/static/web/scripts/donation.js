@@ -12,7 +12,8 @@ var donationRecord = new Vue({
         hasPermission: false,
         sameOrg: false,
         type: "",
-        isRecurrent: false
+        isRecurrent: false,
+        receiptGenerated: false
     },
     methods: {
         cancelar(){
@@ -26,6 +27,20 @@ var donationRecord = new Vue({
                 .done(function(){
                     window.location.reload();
                 })
+        },
+        generarRecibo(){
+            $.post("/api/transactions/debt/generate/"+urlParams.get('id'))
+                .done(function (data) {
+                swal.fire({
+                    icon: 'success',
+                    title: "Realizada Exitosa",
+                    text: "Transacción creada correctamente.",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                let txnId = data.receiptTransactionId;
+                window.location.href = '/web/transaction.html?id=' + txnId + '&orgId=' + urlParams.get('orgId');
+            })
         },
         back() {
             window.location.href = '/web/mainPage.html?id=' + urlParams.get('orgId');
@@ -48,6 +63,7 @@ function getDonation(){
             donationRecord.isRecurrent = data.isRecurrent;
             donationRecord.type = data.type;
             donationRecord.sameOrg = (data.orgId.toString() === urlParams.get('orgId').toString());
+            donationRecord.receiptGenerated = data.receiptGenerated;
             document.title = "Donación " + data.donationNumber;
         })
 }

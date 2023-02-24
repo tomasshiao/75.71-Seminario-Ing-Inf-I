@@ -27,6 +27,7 @@ class Donation {
     private DonationStatus status
     private BigDecimal amount
     private Long donationNumber
+    private Boolean receiptGenerated = false
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="organizationPerson_id")
@@ -115,6 +116,18 @@ class Donation {
 
     OrganizationDonation getOrganizationDonation(){
         this.organizationDonations.first()
+    }
+
+    BigDecimal getAmount(){
+        this.amount
+    }
+
+    Boolean setReceiptGenerated(){
+        this.receiptGenerated = true
+    }
+
+    Boolean getReceiptGenerated(){
+        this.receiptGenerated
     }
 
     Map<String, Object> toViewDTO(){

@@ -137,10 +137,10 @@ function getOrgData(){
             mainPage.hasPermission = data.hasPermission;
             mainPage.organizationExists = data.organizationExists;
             mainPage.collaborator = data.collaborator;
-            mainPage.friends = data.friends;
-            mainPage.events = data.events;
-            mainPage.donations = data.donations;
-            mainPage.transactions = data.transactions;
+            mainPage.friends = data.friends.sort((a, b) => a.fullName.localeCompare(b.fullName));
+            mainPage.events = data.events.sort((a, b) => a.eventName.localeCompare(b.eventName));
+            mainPage.donations = data.donations.sort((a, b) => a.donationNumber - b.donationNumber);
+            mainPage.transactions = data.transactions.sort((a, b) => a.transactionNumber - b.transactionNumber);
             document.title = data.organization.name;
             console.info("Organization data", data)
         })
