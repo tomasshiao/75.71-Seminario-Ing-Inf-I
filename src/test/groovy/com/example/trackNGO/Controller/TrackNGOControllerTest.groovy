@@ -1,7 +1,5 @@
 package com.example.trackNGO.Controller
 
-import com.example.trackNGO.Model.Organization
-import com.example.trackNGO.Repositories.OrganizationRepository
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 
@@ -9,7 +7,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 class TrackNGOControllerTest {
     // Tests de las US de la sección 5
     @Test
-    void whenPurchaseAmountIsLessThanBalance_thenPurchaseIsSuccessful() throws Exception{
+    void whenPurchaseAmountIsLessThanBalance_thenPurchaseIsSuccessful(){
 
     }
 
