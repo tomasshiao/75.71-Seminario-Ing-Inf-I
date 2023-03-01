@@ -547,6 +547,7 @@ class TrackNGOController {
         personTxnSet.add(personTxn)
         transaction.setPersonTransaction(personTxnSet)
         transactionRepository.save(transaction)
+        Map<String, Object> response = new HashMap<>()
         if((txnType == TransactionType.PURCHASE) || (txnType == TransactionType.PAYMENT)) {
             if (organization.getBalance() < amountBigDecimal) {
                 if(txnType == TransactionType.PAYMENT) {
@@ -556,6 +557,7 @@ class TrackNGOController {
                     organizationTransactionRepository.save(new OrganizationTransaction(organization, transactionDebt))
                     organization.setBalance(0 as BigDecimal)
                     organizationRepository.save(organization)
+                    response.put("debtTransactionId", transactionDebt.getId())
                 } else if(txnType == TransactionType.PURCHASE){
                     transaction.updateStatus(TransactionStatus.DENIED)
                     transactionRepository.save(transaction)
@@ -572,7 +574,6 @@ class TrackNGOController {
             transaction.updateStatus(TransactionStatus.ACCEPTED)
             transactionRepository.save(transaction)
         }
-        Map<String, Object> response = new HashMap<>()
         response.put("transactionId", transaction.getId())
         return new ResponseEntity<>(response, HttpStatus.CREATED)
     }
