@@ -21,6 +21,10 @@ var createDonationForm = new Vue({
             {
                 label: "MONETARY",
                 value: "Monetary"
+            },
+            {
+                label: "OTHER",
+                value: "Other"
             }
         ],
         recurrencyOptions: [

@@ -106,8 +106,7 @@ class Transaction {
     Person getTxnPerson(){
         this.personTransactions.stream()
                 .filter(personTxn -> personTxn.getTransaction().getId() == this.id)
-                .collect(Collectors.toList())
-                .first().getPerson()
+                .collect(Collectors.toList())[0]?.getPerson()
     }
 
     Set<PersonTransaction> getPersonTransactions(){
@@ -182,7 +181,7 @@ class Transaction {
             "Name": this.getName(),
             "type": this.getTxnType(),
             "status": this.getStatus(),
-            "txnPersonId": this.getTxnPerson().getId(),
+            "txnPersonId": this.getTxnPerson()?.getId(),
             "amount": this.getTxnAmount(),
             "description": this.getTxnDescription(),
             "rejectionReason": this.getRejectionReason(),

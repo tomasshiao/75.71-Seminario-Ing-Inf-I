@@ -4,7 +4,8 @@ enum DonationType {
     MONETARY,
     MATERIAL_GOODS,
     PERISHABLE_FOOD,
-    NON_PERISHABLE_FOOD
+    NON_PERISHABLE_FOOD,
+    OTHER
 }
 
 /***
