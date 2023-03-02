@@ -1,0 +1,19 @@
+@startuml
+
+abstract class AbstractPerson{}
+class Donation{}
+class Transaction{}
+
+
+class PersonDonation{}
+class PersonTransaction{}
+
+AbstractPerson -- PersonDonation
+AbstractPerson -- PersonTransaction
+
+Donation -- PersonDonation
+Transaction -- PersonTransaction
+
+
+
+@enduml

@@ -1,0 +1,32 @@
+@startuml
+
+
+class OrganizationDonation{}
+class OrganizationTransaction{}
+class OrganizationEvent{}
+class OrganizationPerson{}
+
+class Organization{}
+class Donation{}
+class Transaction{}
+class Event{}
+abstract class AbstractPerson{}
+
+
+
+
+Organization -- OrganizationDonation
+Organization -- OrganizationTransaction
+Organization -- OrganizationEvent
+Organization -- OrganizationPerson
+
+OrganizationDonation -- Donation
+OrganizationTransaction -- Transaction
+OrganizationEvent -- Event
+OrganizationPerson -- AbstractPerson
+
+
+
+
+
+@enduml

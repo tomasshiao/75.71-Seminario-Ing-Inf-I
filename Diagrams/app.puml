@@ -1,43 +1,99 @@
 @startuml
-interface Friend{}
-interface Beneficiary{}
-class User{}
+interface Person{}
 
-class App{}
+class Collaborator{}
+Collaborator -.|> Person
+Friend -.|> Person
 
-App --> User
-App --> Beneficiary
-App --> Friend
+class TrackNGOApplication{}
 
-interface Authenticator{}
-App --> Authenticator
+TrackNGOApplication --> Organization
+TrackNGOApplication --> Donation
 
 
 
 class Transaction{}
-App --> Transaction
-Transaction --> Payment
-Transaction --> Purchase
-
-interface TransactionMethod{}
-
-class Payment{}
-Payment --> TransactionMethod
-class PaymentValidator{}
-Payment --> PaymentValidator
-
-class Purchase{}
-class PurchaseValidator{}
-Purchase --> PurchaseValidator
-Purchase --> TransactionMethod
+TrackNGOApplication --> Transaction
 
 
+enum TransactionStatus{
+PROCESSING
+    DENIED
+    ACCEPTED
+}
 
-class Finance{}
-App --> Finance
+Transaction --> TransactionStatus
+
+enum TransactionType {
+PURCHASE
+    SALE
+    RECEIPT
+    PAYMENT
+    DEBT
+}
+
+Transaction --> TransactionType
+
+
 
 
 class Event{}
-App --> Event
+TrackNGOApplication --> Event
+
+abstract class AbstractPerson{}
+TrackNGOApplication --> AbstractPerson
+
+AbstractPerson--> Person
+
+
+enum DonationRecurrency{
+ONE_TIME
+    WEEKLY
+    FORTNIGHT
+    MONTHLY
+    BIMONTHLY
+    TRIMONTHLY
+    SEASONAL
+    SEMIANNUALLY
+    ANNUALLY
+    BIENNIALLY
+    NOT_APPLICABLE
+}
+enum DonationStatus{
+PENDING
+    NOT_APPLICABLE
+    ACTIVE
+    INACTIVE
+    SUSPENDED
+}
+enum DonationType{
+MONETARY
+    MATERIAL_GOODS
+    PERISHABLE_FOOD
+    NON_PERISHABLE_FOOD
+}
+
+Donation --> DonationRecurrency
+Donation --> DonationStatus
+Donation --> DonationType
+
+
+enum EventType{
+CHARITY
+    FESTIVE
+    INTERNAL
+
+}
+
+Event --> EventType
+
+
+enum Profile{
+SYSADMIN
+    VOLUNTEER
+    NOT_APPLICABLE
+}
+
+Person --> Profile
 
 @enduml
