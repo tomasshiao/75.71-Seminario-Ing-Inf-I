@@ -12,7 +12,8 @@ var mainPage = new Vue({
         friends: [],
         events: [],
         transactions: [],
-        donations: []
+        donations: [],
+        balance: 0
     },
     methods: {
         logout(){
@@ -141,6 +142,7 @@ function getOrgData(){
             mainPage.events = data.events.sort((a, b) => a.eventName.localeCompare(b.eventName));
             mainPage.donations = data.donations.sort((a, b) => a.donationNumber - b.donationNumber);
             mainPage.transactions = data.transactions.sort((a, b) => a.transactionNumber - b.transactionNumber);
+            mainPage.balance = data.balance;
             document.title = data.organization.name;
             console.info("Organization data", data)
         })

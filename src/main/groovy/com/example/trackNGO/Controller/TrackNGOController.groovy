@@ -126,6 +126,7 @@ class TrackNGOController {
                 dto.put("friends", friends)
                 dto.put("transactions", transactions)
                 dto.put("donations", donations)
+                dto.put("balance", organization.getBalance())
             } else {
                 return new ResponseEntity<>(MakeMap("errorMsg", "No existe usuario"), HttpStatus.FORBIDDEN)
             }
@@ -516,7 +517,7 @@ class TrackNGOController {
     }
 
     @RequestMapping(path = "/transactions/{orgId}/create", method = RequestMethod.POST)
-    ResponseEntity<Map<String, Object>> createTransaction(@PathVariable Long orgId, @RequestParam String transactionType, @RequestParam Long amount, @RequestParam Long transactionEntity, Authentication authentication){
+    ResponseEntity<Map<String, Object>> createTransaction(@PathVariable Long orgId, @RequestParam String transactionType, @RequestParam Double amount, @RequestParam Long transactionEntity, Authentication authentication){
         validateIsGuest(authentication)
         if(orgId == null || stringParamIsNull(transactionType) || amount == null || transactionEntity == null){
             return new ResponseEntity<>(MakeMap("errorMsg", "Request inválido, algún parámetro es null"), HttpStatus.BAD_REQUEST)
@@ -563,7 +564,7 @@ class TrackNGOController {
                     transactionRepository.save(transaction)
                 }
             } else {
-                organization.setBalance(amountBigDecimal - organization.getBalance())
+                organization.setBalance(organization.getBalance() - amountBigDecimal)
                 organizationRepository.save(organization)
                 transaction.updateStatus(TransactionStatus.ACCEPTED)
                 transactionRepository.save(transaction)

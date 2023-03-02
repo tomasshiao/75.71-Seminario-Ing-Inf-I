@@ -175,8 +175,8 @@ class TrackNgoApplication {
             Transaction transaction1 = new Transaction(1000 as BigDecimal, TransactionType.RECEIPT, 1)
             Transaction transaction2 = new Transaction(300 as BigDecimal, TransactionType.PURCHASE, 2)
             //Transaction transaction3 = new Transaction(351.24 as BigDecimal, TransactionType.RECEIPT, 5)
-            Transaction transaction4 = new Transaction(33212.55 as BigDecimal, TransactionType.SALE, 3)
-            Transaction transaction5 = new Transaction(331.91 as BigDecimal, TransactionType.PAYMENT, 4)
+            Transaction transaction4 = new Transaction(33000 as BigDecimal, TransactionType.SALE, 3)
+            Transaction transaction5 = new Transaction(3000 as BigDecimal, TransactionType.PAYMENT, 4)
 
             transactionRepository.save(transaction1)
             transactionRepository.save(transaction2)
@@ -226,7 +226,7 @@ class TrackNgoApplication {
 
             org1.setBalance(700 as BigDecimal)
             organizationRepository.save(org1)
-            org2.setBalance(33231.88 as BigDecimal)
+            org2.setBalance(30000 as BigDecimal)
             organizationRepository.save(org2)
         }
     }
